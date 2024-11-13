@@ -7,6 +7,8 @@ import { OIDCForGitHubCI } from './stacks/devops/OIDCForGitHubCI';
 import { AuthStack } from './stacks/AuthStack';
 import { GrammarToolStack } from './stacks/GrammarToolStack';
 
+import { Storage } from './stacks/Storage';
+
 export default {
   config(_input) {
     return {
