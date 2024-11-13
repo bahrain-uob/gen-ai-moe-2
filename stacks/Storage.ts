@@ -1,2 +1,2 @@
 // Create an S3 bucket
-export const bucket = new sst.aws.Bucket("SST-Test1771");
+export const storageTest = new sst.aws.Bucket("SST-Test1771");
