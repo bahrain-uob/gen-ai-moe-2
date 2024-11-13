@@ -23,6 +23,8 @@ export const main = async (
     };
   }
 
+  console.log('123')
+
   const userId = event.requestContext.authorizer!.jwt.claims.sub;
   if (!userId) {
     return {
