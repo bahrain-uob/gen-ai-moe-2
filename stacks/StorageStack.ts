@@ -2,8 +2,11 @@ import { Bucket, Function, StackContext } from "sst/constructs";
 
 export function StorageStack({ stack }: StackContext) {
   // Create the Lambda function
-  const notificationFunction = new Function(stack, "NotificationFunction", {
-    handler: "packages/functions/src/notification.main",
+  const notificationFunction = new Function(stack, "NotificationFunctionPY", {
+    handler: "packages/functions/src/TextNotification.main",
+    timeout: 900,
+    runtime: "python3.9", 
+    permissions: ["textract:AmazonTextractFullAccesss","s3:GetObject" ,"textract:StartDocumentAnalysis", "textract:GetDocumentAnalysis"],
   });
 
   // Create the S3 bucket and set up notifications
@@ -11,16 +14,15 @@ export function StorageStack({ stack }: StackContext) {
     notifications: {
       myNotification: {
         function: notificationFunction,
-        events: ["object_created"], // Trigger on object creation
+        events: ["object_created"], 
       },
     },
   });
-
   // Outputs
   stack.addOutputs({
     BucketName: bucket.bucketName,
     LambdaFunctionName: notificationFunction.functionName,
   });
 
-  return { bucket };
+  return { bucket , notificationFunction};
 }

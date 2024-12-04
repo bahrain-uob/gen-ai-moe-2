@@ -6,6 +6,7 @@ import { ImageBuilderForCodeCatalyst } from './stacks/devops/ImageBuilderForCode
 import { OIDCForGitHubCI } from './stacks/devops/OIDCForGitHubCI';
 import { AuthStack } from './stacks/AuthStack';
 import { GrammarToolStack } from './stacks/GrammarToolStack';
+import { StorageStack } from './stacks/StorageStack';
 
 export default {
   config(_input) {
@@ -30,7 +31,8 @@ export default {
         .stack(AuthStack)
         .stack(GrammarToolStack)
         .stack(ApiStack)
-        .stack(FrontendStack);
+        .stack(FrontendStack)
+        .stack(StorageStack);
     }
   },
 } satisfies SSTConfig;
