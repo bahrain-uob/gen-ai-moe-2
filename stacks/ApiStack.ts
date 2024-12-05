@@ -97,9 +97,7 @@ export function ApiStack({ stack }: StackContext) {
       'POST /putCEFRQuestions': {
         function: {
           handler: 'packages/functions/src/putCEFRQuestions.handler',
-          permissions: [
-            'dynamodb:PutItem',
-          ],
+          permissions: ['dynamodb:PutItem'],
           environment: {
             cefrQuestionsTableName: cefrQuestionsTable.tableName,
           },
@@ -264,6 +262,17 @@ export function ApiStack({ stack }: StackContext) {
           timeout: '120 seconds',
         },
       },
+      'GET /aggregates': {
+        function: {
+          handler:
+            'packages/functions/src/sample-python-lambda/getaggregates.main',
+          permissions: ['dynamodb:GetItem', 'dynamodb:Query'] ,
+          environment: {
+            tableName: 'Records', // Pass the table name as an environment variable
+          },
+          timeout: '120 seconds',
+        },
+      },
     },
   });
 
@@ -277,4 +286,5 @@ export function ApiStack({ stack }: StackContext) {
 
   return { api, apiCachePolicy, webSocket };
 }
+
 // last change pull request!
