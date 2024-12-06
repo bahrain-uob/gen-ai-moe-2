@@ -127,6 +127,18 @@ export function ApiStack({ stack }: StackContext) {
           environment: { audioBucket: audiobucket.bucketName },
         },
       },
+      'GET /aggregates': {
+        function: {
+          handler:
+            'packages/functions/src/sample-python-lambda/getAggregates.main',
+          runtime: 'python3.11',
+          permissions: ['dynamodb:GetItem', 'dynamodb:Query'],
+          timeout: '120 seconds',
+          environment: {
+            tableName: 'Records',
+          },
+        },
+      },
       // get the test item when graded
       'GET /fullTestFeedback/{SK}':
         'packages/functions/src/getFullTestFeedback.main',
@@ -258,17 +270,6 @@ export function ApiStack({ stack }: StackContext) {
           environment: {
             speakingUploadBucketName: uploads_bucket.bucketName,
             feedbackTableName: feedback_table.tableName,
-          },
-          timeout: '120 seconds',
-        },
-      },
-      'GET /aggregates': {
-        function: {
-          handler:
-            'packages/functions/src/sample-python-lambda/getaggregates.main',
-          permissions: ['dynamodb:GetItem', 'dynamodb:Query'] ,
-          environment: {
-            tableName: 'Records', // Pass the table name as an environment variable
           },
           timeout: '120 seconds',
         },
