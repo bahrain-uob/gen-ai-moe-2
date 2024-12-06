@@ -1,0 +1,85 @@
+/* AdminHeader styles */
+.header {
+  background-color: #4c929f;
+  padding: 10px 20px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 2px; /* Slight spacing between letters */
+  cursor: pointer;
+}
+
+.nav-link {
+  font-size: 1rem;
+  text-decoration: none;
+  color: white;
+  margin: 0 15px;
+  font-weight: 500;
+  transition: color 0.3s ease; /* Smooth transition on hover */
+}
+
+.nav-link:hover {
+  color: rgba(233, 225, 225, 0.894); /* Change color on hover */
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  margin: 0 10px;
+}
+
+.user-menu {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-icon {
+  font-size: 2rem; /* Account icon size */
+  color: #333; /* Icon color */
+  transition: color 0.3s ease; /* Smooth transition for icon color */
+}
+
+.user-icon:hover {
+  color: rgba(233, 225, 225, 0.894);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 40px; /* Position the dropdown below the icon */
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown-item {
+  background-color: white;
+  color: #333;
+  padding: 10px;
+  width: 150px;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(233, 225, 225, 0.894);
+}

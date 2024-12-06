@@ -13,6 +13,7 @@ import { GrammarToolStack } from './GrammarToolStack';
 export function ApiStack({ stack }: StackContext) {
   const {
     table,
+    cefrQuestionsTable,
     uploads_bucket,
     feedback_table,
     speakingPollyBucket,
@@ -89,6 +90,18 @@ export function ApiStack({ stack }: StackContext) {
           environment: {
             speakingUploadBucketName: uploads_bucket.bucketName,
             feedbackTableName: feedback_table.tableName,
+          },
+          timeout: '120 seconds',
+        },
+      },
+      'POST /putCEFRQuestions': {
+        function: {
+          handler: 'packages/functions/src/putCEFRQuestions.handler',
+          permissions: [
+            'dynamodb:PutItem',
+          ],
+          environment: {
+            cefrQuestionsTableName: cefrQuestionsTable.tableName,
           },
           timeout: '120 seconds',
         },

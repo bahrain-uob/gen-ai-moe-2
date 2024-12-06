@@ -1,5 +1,5 @@
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import { Bucket, Table, StackContext, RDS } from 'sst/constructs';
+import { Bucket, Table, StackContext, Function, RDS } from 'sst/constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager';
@@ -8,11 +8,32 @@ import { Fn, RemovalPolicy, listMapper } from 'aws-cdk-lib';
 import AWS from 'aws-sdk';
 
 export function DBStack(this: any, { stack }: StackContext) {
-  // Create a DynamoDB table
+  // Create the original DynamoDB table 'Records'
+
+  const graphlambdafunction = new Function(stack, 'GraphLambdaFunction', {
+    handler: 'packages/functions/src/sample-python-lambda/graphdatalambda.main',
+    runtime: 'python3.11',
+    permissions: ['dynamodb'], // Dynamodb access
+  });
+
   const table = new Table(stack, 'Records', {
     fields: {
       PK: 'string',
       SK: 'string',
+    },
+    primaryIndex: { partitionKey: 'PK', sortKey: 'SK' },
+    stream: true,
+  });
+
+  table.addConsumers(stack, {
+    consumer1: graphlambdafunction,
+  });
+
+  // Create the new DynamoDB table 'userdata' with PK as 'username' and SK as 'schoolname'
+  const userdataTable = new Table(stack, 'UserData', {
+    fields: {
+      PK: 'string', // 'username' will be the partition key
+      SK: 'string', // 'schoolname' will be the sort key
     },
     primaryIndex: { partitionKey: 'PK', sortKey: 'SK' },
   });
@@ -20,9 +41,6 @@ export function DBStack(this: any, { stack }: StackContext) {
   const uploads_bucket = new Bucket(stack, 'Uploads');
   const Polly_bucket = new Bucket(stack, 'Polly');
   const audiobucket = new Bucket(stack, 'listeningAudios');
-  /* For now we;re using a bucket that is already filled
-   * TODO: change this when the feature of adding questions is implemented
-   */
   const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
     this,
     'speakingPolly',
@@ -31,13 +49,23 @@ export function DBStack(this: any, { stack }: StackContext) {
     },
   );
 
-  //const speakingPollyBucket = new Bucket(stack, 'speakingPolly');
-
   const feedback_table = new Table(stack, 'ResponseFeedback', {
     fields: {
       feedbackId: 'string',
     },
     primaryIndex: { partitionKey: 'feedbackId' },
+  });
+  
+  const cefrQuestionsTable = new Table(stack, 'CEFRQuestions', {
+    fields: {
+      PK: 'string',
+      SK: 'string',
+    },
+    primaryIndex: { partitionKey: 'PK', sortKey: 'SK' },
+  });
+
+  stack.addOutputs({
+    CEFRQuestionsTableName: cefrQuestionsTable.tableName,
   });
 
   // Create an RDS database
@@ -95,15 +123,19 @@ export function DBStack(this: any, { stack }: StackContext) {
 
   // Output database name
   stack.addOutputs({
-    DatabaseName: table.tableName,
+    UserDataTableName: userdataTable.tableName,
   });
 
+  // Return relevant resources
   return {
     table,
+    userdataTable, // Return the new 'userdata' table as well
+    cefrQuestionsTable,
     uploads_bucket,
     feedback_table,
     Polly_bucket,
     speakingPollyBucket,
     audiobucket,
+    graphlambdafunction,
   };
 }

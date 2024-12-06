@@ -1,0 +1,89 @@
+/* Navbar container */
+.navbar {
+  background-color: #4c929f;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+/* Hamburger menu icon container */
+.menu-bars {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Sidebar container */
+.nav-menu {
+  background-color: #4c929f;
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -100%;
+  transition: left 350ms ease-in-out;
+}
+
+/* When sidebar is active, it slides in */
+.nav-menu.active {
+  left: 0;
+}
+
+/* List of items in the sidebar */
+.nav-menu-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+}
+
+/* Individual item container (icon + text) */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  width: 100%;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: rgba(238, 232, 232, 0.884);
+  border-radius: 4px;
+}
+
+/* Container for icon */
+.nav-icon {
+  margin-right: 10px;
+  font-size: 1.5rem; /* Icon size */
+}
+
+/* Container for text */
+.nav-text {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+/* container for the sub-items */
+.sub-menu {
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.sub-menu li {
+  padding: 8px 16px;
+}
+
+.sub-menu li a {
+  color: #4c4646; /* Lighter text color for subcategories */
+}
+
+/* Close button (inside navbar toggle) */
+.navbar-toggle {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+}

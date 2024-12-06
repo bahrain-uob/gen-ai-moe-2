@@ -1,0 +1,91 @@
+/* container of the whole page */
+.admin-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align elements starting from the top */
+  min-height: 100vh; /* Ensure the container stretches to the full viewport height */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box; /* Include padding in width and height calculations */
+}
+
+.dashboard-section {
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+/* Container for the active-users, average */
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.dashboard-card {
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 180px;
+  text-align: center;
+}
+
+.dashboard-card h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.dashboard-card p {
+  font-size: 20px;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+/* search bar container */
+.search-bar {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar input {
+  padding: 10px;
+  width: 250px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-icon {
+  margin-left: -30px; /* Position the icon inside the input box */
+  color: #888;
+  font-size: 18px;
+}
+
+/* Graph section  */
+.graph-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center; /* Center-align graphs horizontally */
+  width: 100%; /* Stretch the section to fit the container width */
+}
+
+.graph {
+  max-width: 300px; /* Limit graph container width */
+  text-align: center;
+}
+
+.graph h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+}

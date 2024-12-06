@@ -2,6 +2,8 @@ import boto3
 import time
 
 def main(event, context):
+    print("Lambda is Triggered NOW in the safe mode :) ")
+    '''
     try:
         print(f"Received event: {event}")
         fileObj = event["Records"][0]
@@ -32,9 +34,14 @@ def main(event, context):
             if jobStatus == 'SUCCEEDED':
                 print("Document analysis succeeded!")
                 print(jobResponse)
+                print("Extracted Text Lines:")
+                for block in jobResponse['Blocks']:
+                    if block['BlockType'] == 'LINE':  # Only process lines of text
+                        print(block['Text'])
             else:
                 print("Document analysis failed!")
         else:
             print("Please upload a PDF file")
     except Exception as e:
         print(f"Error: {str(e)}")
+    '''

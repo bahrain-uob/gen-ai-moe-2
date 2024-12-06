@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Nav } from './components/Nav';
-import { useOutlet } from 'react-router-dom';
+import { useOutlet, useLocation } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 
 export const Layout = ({
@@ -14,6 +14,13 @@ export const Layout = ({
 }) => {
   const authInfo = useContext(AuthContext);
   const showSignIn = authInfo.user === undefined;
+  const location = useLocation(); // Use the location hook to get the current route
+  // Function to decide whether to hide certain nav items based on the current route
+  const shouldHideHeaderItems = () => {
+    // List of routes where you don't want to show "Full Exams" and "Section Exams"
+    const routesWithoutHeaderItems = ['/some-page', '/another-page'];
+    return routesWithoutHeaderItems.includes(location.pathname);
+  };
 
   const getNavEntries = () => {
     if (isLanding) {
@@ -24,8 +31,12 @@ export const Layout = ({
       ];
     } else if (authInfo.user) {
       return [
-        { text: 'Full Exams', to: '/Full-Exam' },
-        { text: 'Section Exams', to: '/Sections' },
+        ...(shouldHideHeaderItems() // Conditionally remove these items
+          ? []
+          : [
+              { text: 'Full Exams', to: '/Full-Exam' },
+              { text: 'Section Exams', to: '/Sections' },
+            ]),
         { text: 'Exercises', to: '/Exercises' },
       ];
     } else {
