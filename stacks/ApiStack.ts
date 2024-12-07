@@ -127,20 +127,19 @@ export function ApiStack({ stack }: StackContext) {
           environment: { audioBucket: audiobucket.bucketName },
         },
       },
-      'GET /aggregates': {
+      'GET /getAggregates': {
         function: {
           handler:
-            'packages/functions/src/sample-python-lambda/getaggregates.main',
-          runtime: 'python3.11',
-          permissions: ['dynamodb:*', 'moaz-codecatalyst-sst-app-Records'],
-          timeout: '120 seconds',
+            'packages/functions/src/getAggregates.handler',
+          permissions: ['dynamodb:*'],
+          timeout: '60 seconds',
           environment: {
             tableName: 'moaz-codecatalyst-sst-app-Records',
           },
-        },
-
-        // get the test item when graded
+        }
       },
+
+      // get the test item when graded
       'GET /fullTestFeedback/{SK}':
         'packages/functions/src/getFullTestFeedback.main',
 

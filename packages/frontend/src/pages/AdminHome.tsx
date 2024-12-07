@@ -3,10 +3,10 @@ import AdminHeader from '../components/AdminHeader';
 import Navbar from '../components/Navbar';
 import { FaSearch } from 'react-icons/fa';
 import '../components/AdminStyle/AdminHome.css';
-
+import { get } from 'aws-amplify/api';
+import { toJSON } from '../utilities';
 
 function AdminHome() {
-  // State and data-fetching logic (as previously written)
   const [studentCount, setStudentCount] = useState<number | null>(null);
   const [avgOverallAvg, setAvgOverallAvg] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -15,25 +15,18 @@ function AdminHome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        setError(null);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        const response = await fetch(
-          'https://kpc58nbxyc.execute-api.us-east-1.amazonaws.com/aggregates',
-          {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          },
+        const response = await toJSON(
+          get({
+            apiName: 'myAPI',
+            path: '/getAggregates',
+          }),
         );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setStudentCount(data.student_count);
-        setAvgOverallAvg(data.avg_overall_avg);
+        setStudentCount(response.student_count);
+        setAvgOverallAvg(response.avg_overall_avg);
       } catch (error) {
+        console.error('Error fetching data:', error);
         setError('Failed to fetch data. Please try again later.');
       } finally {
         setLoading(false);
@@ -68,7 +61,6 @@ function AdminHome() {
         <div className="graph-section">
           <div className="graph">
             <h3>Performance Overview</h3>
-          
           </div>
         </div>
       </main>

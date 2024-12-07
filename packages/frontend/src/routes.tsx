@@ -146,12 +146,12 @@ const noLayoutRoutes: RouteObject[] = [
   // },
   {
     //mychange-----
-    path: '/AdminLogin',
+    path: '/admin-login',
     Component: AdminLogin,
   },
   {
     //mychange------
-    path: '/AdminHome',
+    path: '/admin-home',
     Component: AdminHome,
   },
   // {
