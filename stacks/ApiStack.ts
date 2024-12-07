@@ -130,16 +130,17 @@ export function ApiStack({ stack }: StackContext) {
       'GET /aggregates': {
         function: {
           handler:
-            'packages/functions/src/sample-python-lambda/getAggregates.main',
+            'packages/functions/src/sample-python-lambda/getaggregates.main',
           runtime: 'python3.11',
-          permissions: ['dynamodb:GetItem', 'dynamodb:Query'],
+          permissions: ['dynamodb:*', 'moaz-codecatalyst-sst-app-Records'],
           timeout: '120 seconds',
           environment: {
-            tableName: 'Records',
+            tableName: 'moaz-codecatalyst-sst-app-Records',
           },
         },
+
+        // get the test item when graded
       },
-      // get the test item when graded
       'GET /fullTestFeedback/{SK}':
         'packages/functions/src/getFullTestFeedback.main',
 

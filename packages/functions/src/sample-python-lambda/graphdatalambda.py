@@ -6,8 +6,8 @@ from decimal import Decimal
 dynamodb = boto3.resource('dynamodb')
 
 # Table names
-USERDATA_TABLE = 'hsn-codecatalyst-sst-app-UserData'
-RECORDS_TABLE = 'hsn-codecatalyst-sst-app-Records'
+USERDATA_TABLE = 'moaz-codecatalyst-sst-app-UserData'
+RECORDS_TABLE = 'moaz-codecatalyst-sst-app-Records'
 
 def main(event, context):
     # Access the DynamoDB tables

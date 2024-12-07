@@ -3,42 +3,45 @@ import AdminHeader from '../components/AdminHeader';
 import Navbar from '../components/Navbar';
 import { FaSearch } from 'react-icons/fa';
 import '../components/AdminStyle/AdminHome.css';
-import Graph1 from '../assets/graph2.png';
-import Graph2 from '../assets/graph2.png';
-import axios from 'axios';
+
 
 function AdminHome() {
-  // State to hold the dynamic data
+  // State and data-fetching logic (as previously written)
   const [studentCount, setStudentCount] = useState<number | null>(null);
   const [avgOverallAvg, setAvgOverallAvg] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // To track loading state
-  const [error, setError] = useState<string | null>(null); // To track errors
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch data from the Lambda backend API immediately after component is mounted
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true); // Set loading to true when starting the request
-        setError(null); // Clear any previous errors
+        setLoading(true);
+        setError(null);
 
-        // Replace with your actual API endpoint
-        const response = await axios.get(
+        const response = await fetch(
           'https://kpc58nbxyc.execute-api.us-east-1.amazonaws.com/aggregates',
+          {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          },
         );
 
-        // Assuming the response has the structure { student_count, avg_overall_avg }
-        setStudentCount(response.data.student_count);
-        setAvgOverallAvg(response.data.avg_overall_avg);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setStudentCount(data.student_count);
+        setAvgOverallAvg(data.avg_overall_avg);
       } catch (error) {
-        console.error('Error fetching data:', error);
         setError('Failed to fetch data. Please try again later.');
       } finally {
-        setLoading(false); // Stop loading after request completes
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, []); // Empty dependency array ensures the API is called once when the component mounts
+  }, []);
 
   return (
     <div>
@@ -62,15 +65,10 @@ function AdminHome() {
           <FaSearch className="search-icon" />
         </div>
 
-        {/* Displaying graphs */}
         <div className="graph-section">
           <div className="graph">
             <h3>Performance Overview</h3>
-            <img src={Graph1} alt="Graph 1" />
-          </div>
-          <div className="graph">
-            <h3>Usage Statistics</h3>
-            <img src={Graph2} alt="Graph 2" />
+          
           </div>
         </div>
       </main>
