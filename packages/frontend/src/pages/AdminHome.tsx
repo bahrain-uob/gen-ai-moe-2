@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminHeader from '../components/AdminHeader';
 import Navbar from '../components/Navbar';
-import { FaSearch } from 'react-icons/fa';
 import '../components/AdminStyle/AdminHome.css';
 import { get } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
@@ -16,7 +15,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-
+ 
 // Register the necessary components
 ChartJS.register(
   CategoryScale,
@@ -26,7 +25,7 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
+ 
 function AdminHome() {
   const [studentCount, setStudentCount] = useState<number | null>(null);
   const [avgOverallAvg, setAvgOverallAvg] = useState<number | null>(null);
@@ -38,19 +37,22 @@ function AdminHome() {
   const [avgWritingScore, setAvgWritingScore] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+ 
+  const [schools, setSchools] = useState<string[]>([]); // State for schools
+  const [selectedSchool, setSelectedSchool] = useState<string | null>(null); // State for selected school
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await new Promise(resolve => setTimeout(resolve, 2000));
-
+ 
         const response = await toJSON(
           get({
             apiName: 'myAPI',
-            path: '/getAggregates',
+            path: '/schooldatafetch',
           }),
         );
-
+ 
         // Set state with the response data
         setStudentCount(response.student_count);
         setAvgOverallAvg(response.avg_overall_avg);
@@ -65,10 +67,44 @@ function AdminHome() {
         setLoading(false);
       }
     };
-
+ 
     fetchData();
   }, []);
-
+ 
+  // Fetch list of schools
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const response = await toJSON(
+          get({
+            apiName: 'myAPI',
+            path: '/listofschools',
+          }),
+        );
+ 
+        // Assuming response.schools contains the list of school names
+        if (response.schools) {
+          setSchools(response.schools);
+        }
+      } catch (error) {
+        console.error('Error fetching schools:', error);
+        setError('Failed to fetch the list of schools.');
+      }
+    };
+ 
+    fetchSchools();
+  }, []);
+ 
+  const handleSchoolChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSchool = event.target.value;
+    setSelectedSchool(selectedSchool);
+  
+    // Redirect to the new page with the selected school in the URL
+    const redirectUrl = `/schooldatagraph?schoolname=${selectedSchool}`;
+    window.location.href = redirectUrl;
+  };
+  
+ 
   // Define chart data for the chart
   const chartData: ChartData<'bar'> = {
     labels: ['Reading', 'Writing', 'listening', 'speaking'],
@@ -101,7 +137,7 @@ function AdminHome() {
       },
     ],
   };
-
+ 
   // Chart options (optional)
   const chartOptions: ChartOptions<'bar'> = {
     responsive: true,
@@ -111,7 +147,7 @@ function AdminHome() {
       },
     },
   };
-
+ 
   return (
     <div>
       <AdminHeader />
@@ -128,7 +164,7 @@ function AdminHome() {
               <p>{studentCount}</p>
             )}
           </div>
-
+ 
           <div className="dashboard-card">
             <h3>Average</h3>
             {loading ? (
@@ -140,12 +176,7 @@ function AdminHome() {
             )}
           </div>
         </div>
-
-        <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-          <FaSearch className="search-icon" />
-        </div>
-
+ 
         <div
           className="graph-section"
           style={{ width: '100%', height: '1000px' }}
@@ -155,9 +186,28 @@ function AdminHome() {
             <ChartComponent data={chartData} options={chartOptions} />
           </div>
         </div>
+ 
+        <div className="school-selector">
+          <h3>Select a School</h3>
+          {error ? (
+            <p>{error}</p>
+          ) : (
+            <select onChange={handleSchoolChange} value={selectedSchool || ''}>
+              <option value="" disabled>
+                Select a school
+              </option>
+              {schools.map((school, index) => (
+                <option key={index} value={school}>
+                  {school}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </main>
     </div>
   );
 }
-
+ 
 export default AdminHome;
+ 

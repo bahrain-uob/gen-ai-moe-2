@@ -5,7 +5,7 @@ from decimal import Decimal
 # Initialize DynamoDB resource
 dynamodb = boto3.resource('dynamodb')
 # Define the Records table
-records_table = dynamodb.Table('moaz-codecatalyst-sst-app-Records')
+records_table = dynamodb.Table('asareer-codecatalyst-sst-app-Records')
 
 # Scan the Records table for all items related to student scores
 try:

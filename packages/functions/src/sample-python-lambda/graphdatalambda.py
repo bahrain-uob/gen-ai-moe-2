@@ -8,8 +8,8 @@ from decimal import Decimal
 dynamodb = boto3.resource('dynamodb')
 
 # Table names
-USERDATA_TABLE = 'moaz-codecatalyst-sst-app-UserData'
-RECORDS_TABLE = 'moaz-codecatalyst-sst-app-Records'
+USERDATA_TABLE = 'asareer-codecatalyst-sst-app-UserData'
+RECORDS_TABLE = 'asareer-codecatalyst-sst-app-Records'
 
 def main(event, context):
     # Access the DynamoDB tables

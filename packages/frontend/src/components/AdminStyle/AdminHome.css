@@ -89,3 +89,72 @@
   font-size: 18px;
   color: #333;
 }
+.school-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.school-selector h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.school-select {
+  width: 300px; /* Wider dropdown for readability */
+  height: 45px; /* Larger height for better usability */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.school-select:focus {
+  border-color: #007bff; /* Highlight border on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.school-select option {
+  font-size: 16px;
+  padding: 5px;
+}
+
+@media (max-width: 768px) {
+  .school-select {
+    width: 90%; /* Responsive width for smaller screens */
+  }
+}
+.school-selector {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.school-selector h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.school-select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 200px;
+  outline: none;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.school-select:focus {
+  border-color: #007bff;
+  background-color: #fff;
+}

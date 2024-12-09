@@ -9,6 +9,7 @@ import { CacheHeaderBehavior, CachePolicy } from 'aws-cdk-lib/aws-cloudfront';
 import { Duration } from 'aws-cdk-lib/core';
 import { AuthStack } from './AuthStack';
 import { GrammarToolStack } from './GrammarToolStack';
+import { UserData } from 'aws-cdk-lib/aws-ec2';
 
 export function ApiStack({ stack }: StackContext) {
   const {
@@ -19,6 +20,7 @@ export function ApiStack({ stack }: StackContext) {
     speakingPollyBucket,
     Polly_bucket,
     audiobucket,
+    userdataTable,
   } = use(DBStack);
   const { auth } = use(AuthStack);
   const { grammarToolDNS } = use(GrammarToolStack);
@@ -133,17 +135,28 @@ export function ApiStack({ stack }: StackContext) {
           permissions: ['dynamodb:*'],
           timeout: '60 seconds',
           environment: {
-            tableName: 'moaz-codecatalyst-sst-app-Records',
+            tableName: table.tableName,
           },
         },
       },
+
       'GET /schooldatafetch': {
         function: {
           handler: 'packages/functions/src/schooldatafetch.handler',
           permissions: ['dynamodb:*'],
           timeout: '60 seconds',
           environment: {
-            tableName: 'moaz-codecatalyst-sst-app-Records',
+            tableName: table.tableName,
+          },
+        },
+      },
+      'GET /listofschools': {
+        function: {
+          handler: 'packages/functions/src/listofschools.handler',
+          permissions: ['dynamodb:*'],
+          timeout: '60 seconds',
+          environment: {
+            tableName: userdataTable.tableName,
           },
         },
       },

@@ -37,16 +37,24 @@ function AdminHome() {
   const [avgWritingScore, setAvgWritingScore] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [schoolName, setSchoolName] = useState<string | null>(null);
 
   useEffect(() => {
+    // Extract school name from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const schoolNameFromUrl = urlParams.get('schoolname');
+    setSchoolName(schoolNameFromUrl);
+
     const fetchData = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        setLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
+        // API call with school name
         const response = await toJSON(
           get({
             apiName: 'myAPI',
-            path: '/schooldatafetch',
+            path: `/schooldatafetch?schoolname=${schoolNameFromUrl}`,
           }),
         );
 
@@ -65,7 +73,12 @@ function AdminHome() {
       }
     };
 
-    fetchData();
+    if (schoolNameFromUrl) {
+      fetchData();
+    } else {
+      setError('School name not found in the URL.');
+      setLoading(false);
+    }
   }, []);
 
   // Define chart data for the chart
@@ -139,8 +152,6 @@ function AdminHome() {
             )}
           </div>
         </div>
-
-    
 
         <div
           className="graph-section"
