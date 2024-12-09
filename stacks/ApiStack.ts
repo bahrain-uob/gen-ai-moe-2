@@ -129,14 +129,23 @@ export function ApiStack({ stack }: StackContext) {
       },
       'GET /getAggregates': {
         function: {
-          handler:
-            'packages/functions/src/getAggregates.handler',
+          handler: 'packages/functions/src/getAggregates.handler',
           permissions: ['dynamodb:*'],
           timeout: '60 seconds',
           environment: {
             tableName: 'moaz-codecatalyst-sst-app-Records',
           },
-        }
+        },
+      },
+      'GET /schooldatafetch': {
+        function: {
+          handler: 'packages/functions/src/schooldatafetch.handler',
+          permissions: ['dynamodb:*'],
+          timeout: '60 seconds',
+          environment: {
+            tableName: 'moaz-codecatalyst-sst-app-Records',
+          },
+        },
       },
 
       // get the test item when graded

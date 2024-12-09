@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminHeader from '../components/AdminHeader';
 import Navbar from '../components/Navbar';
-import { FaSearch } from 'react-icons/fa';
 import '../components/AdminStyle/AdminHome.css';
 import { get } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
@@ -47,7 +46,7 @@ function AdminHome() {
         const response = await toJSON(
           get({
             apiName: 'myAPI',
-            path: '/getAggregates',
+            path: '/schooldatafetch',
           }),
         );
 
@@ -141,10 +140,7 @@ function AdminHome() {
           </div>
         </div>
 
-        <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-          <FaSearch className="search-icon" />
-        </div>
+    
 
         <div
           className="graph-section"

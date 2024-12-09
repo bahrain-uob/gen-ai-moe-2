@@ -1,3 +1,5 @@
+
+
 import boto3
 import json
 from decimal import Decimal
@@ -149,6 +151,9 @@ def main(event, context):
 
             except Exception as e:
                 print(f"Error updating aggregate {aggregate['SK']}: {e}")
+
+
+
 
     except Exception as e:
         print(f"Error calculating or saving aggregates: {e}")

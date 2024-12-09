@@ -18,6 +18,7 @@ import { AddListeningQPage } from './pages/AddListeningQPage.tsx';
 import { SuccessAddListeningQPage } from './pages/SuccessAddListeningQPage.tsx';
 import { SignOutPage } from './pages/signOut.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
+
 // import { WritingPage } from './pages/WritingPage.tsx';
 //import { writingSection } from './utilities.ts';
 // import RAnswersPage from './pages/RAnswersPage.tsx';
@@ -38,6 +39,8 @@ import { DevPage } from './pages/DevPage.tsx';
 //Abeer changes
 import AdminLogin from './pages/AdminLogin.tsx';
 import AdminHome from './pages/AdminHome.tsx';
+import Schooldatafetch from './pages/schoolsdata.tsx';
+
 //import AdminUploadExams from './pages/AdminUploadExams.tsx';
 
 // These routes will have the landing nav bar
@@ -154,6 +157,12 @@ const noLayoutRoutes: RouteObject[] = [
     path: '/admin-home',
     Component: AdminHome,
   },
+  {
+    //mychange------
+    path: '/schooldatagraph',
+    Component: Schooldatafetch,
+  },
+
   // {
 
   //   path: '/AdminUploadExams',
