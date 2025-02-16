@@ -20,7 +20,9 @@ export function StorageStack({ stack }: StackContext) {
     },
   });
 
-  const bucket2 = new Bucket(stack, "ExtractedTXT");
+  const bucket2 = new Bucket(stack, "ExtractedTXT",{
+    blockPublicACLs: true,
+  });
   notificationFunction.bind([bucket2]);
   // Outputs
   stack.addOutputs({
