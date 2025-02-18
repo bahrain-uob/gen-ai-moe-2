@@ -14,11 +14,8 @@ export default {
     return {
       name: 'codecatalyst-sst-app',
       region: 'us-east-1',
-      role: "CodeCatalystCICDev",
       cdk:{
-        cloudFormationExecutionRole: "CodeCatalystCICDev",
         publicAccessBlockConfiguration: false,
-        customPermissionsBoundary: "NCSC-Boundry"
       }
     };
   },
