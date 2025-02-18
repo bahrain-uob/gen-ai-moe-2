@@ -12,6 +12,7 @@ export function StorageStack({ stack }: StackContext) {
 
   // Create the S3 bucket and set up notifications
   const bucket = new Bucket(stack, 'BucketTextract', {
+    blockPublicACLs: true,
     notifications: {
       myNotification: {
         function: notificationFunction,
@@ -20,7 +21,9 @@ export function StorageStack({ stack }: StackContext) {
     },
   });
 
-  const bucket2 = new Bucket(stack, "ExtractedTXT");
+  const bucket2 = new Bucket(stack, "ExtractedTXT",{
+    blockPublicACLs: true,
+  });
   notificationFunction.bind([bucket2]);
   // Outputs
   stack.addOutputs({

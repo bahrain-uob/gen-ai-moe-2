@@ -7,7 +7,7 @@ import * as rds from 'aws-cdk-lib/aws-rds';
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager';
 import * as path from 'path';
 import { Fn, RemovalPolicy, listMapper } from 'aws-cdk-lib';
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 
 export function DBStack(this: any, { stack }: StackContext) {
   // Create the original DynamoDB table 'Records'
@@ -45,17 +45,34 @@ graphlambdafunction.addEnvironment('RECORDS_TABLE', table.tableName);
 graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
 
 
-  const uploads_bucket = new Bucket(stack, 'Uploads');
+  const uploads_bucket = new Bucket(stack, 'Uploads',{
+    blockPublicACLs: true,
+  });
   
-  const Polly_bucket = new Bucket(stack, 'Polly');
-  const audiobucket = new Bucket(stack, 'listeningAudios');
-  const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
-    this,
-    'speakingPolly',
-    {
-      bucketArn: 'arn:aws:s3:::speaking-questions-polly',
-    },
-  );
+  const Polly_bucket = new Bucket(stack, 'Polly',{
+    blockPublicACLs: true,
+  });
+  const audiobucket = new Bucket(stack, 'listeningAudios',{
+    blockPublicACLs: true,
+  });
+  // const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
+  //   this,
+  //   'speakingPolly',
+  //   {
+  //     bucketArn: 'arn:aws:s3:::speaking-questions-polly',
+  //   },
+  // );
+
+  const speakingPollyBucket = new Bucket(stack, 'speakingPolly',{
+    blockPublicACLs: true,
+    cdk:{
+      bucket: {
+        bucketName: 'speaking-questions-polly',
+        bucketArn: 'arn:aws:s3:::speaking-questions-polly',
+        //blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      }
+    }
+  })
 
   const feedback_table = new Table(stack, 'ResponseFeedback', {
     fields: {
@@ -132,6 +149,7 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   // Output database name
   stack.addOutputs({
     UserDataTableName: userdataTable.tableName,
+    SpeakingBucketName: speakingPollyBucket.bucketName,
   });
 
   // Return relevant resources

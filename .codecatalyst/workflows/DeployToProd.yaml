@@ -1,4 +1,4 @@
-Name: DeployToProd
+Name: DeployToIGA
 Compute:
   Type: EC2
 SchemaVersion: "1.0"
@@ -39,6 +39,6 @@ Actions:
       Fleet: Linux.x86-64.Large
     Environment:
       Connections:
-        - Role: CodeCatalystWorkflowDevelopmentRole-moe-ielts-phase2
-          Name: "664418980468"
-      Name: Prod
+        - Role: CodeCatalystCICDev
+          Name: "597088060025"
+      Name: iga
