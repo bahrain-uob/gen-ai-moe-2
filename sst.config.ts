@@ -15,6 +15,7 @@ export default {
       name: 'codecatalyst-sst-app',
       region: 'us-east-1',
       cdk:{
+        publicAccessBlockConfiguration: true,
         customPermissionsBoundary: "NCSC-Boundry"
       }
     };
