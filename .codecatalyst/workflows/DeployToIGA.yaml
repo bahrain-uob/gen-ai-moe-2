@@ -41,4 +41,4 @@ Actions:
       Connections:
         - Role: CodeCatalystCICDev
           Name: "597088060025"
-      Name: iga
+      Name: DeployToDev
