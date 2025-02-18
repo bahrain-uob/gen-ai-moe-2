@@ -1,4 +1,3 @@
-<<<<<<< HEAD:.codecatalyst/workflows/DeployToProd.yaml
 Name: DeployToIGA
 Compute:
   Type: EC2
@@ -86,5 +85,4 @@ Actions:
       Connections:
         - Role: CodeCatalystCICDev
           Name: "597088060025"
->>>>>>> d141a224b885d148bbcc66be64667459c604e22c:.codecatalyst/workflows/DeployToIGA.yaml
       Name: iga
