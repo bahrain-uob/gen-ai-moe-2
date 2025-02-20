@@ -20,20 +20,22 @@ export function StorageStack({ stack }: StackContext) {
         events: ['object_created'],
       },
     },
-    // cdk:{
-    //   bucket:{
-    //     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-    //   }
-    // }
+    cdk:{
+      bucket:{
+        publicReadAccess: false,
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+      }
+    }
   });
 
   const bucket2 = new Bucket(stack, "ExtractedTXT",{
     //blockPublicACLs: true,
-    // cdk:{
-    //   bucket:{
-    //     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-    //   }
-    // }
+    cdk:{
+      bucket:{
+        publicReadAccess: false,
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+      }
+    }
   });
   notificationFunction.bind([bucket2]);
   // Outputs

@@ -15,7 +15,6 @@ export default {
       name: 'codecatalyst-sst-app',
       region: 'us-east-1',
       cdk:{
-        customPermissionsBoundary: "arn:aws:iam::597088060025:policy/NCSC-Boundry",
         publicAccessBlockConfiguration: false,
       }
     };
