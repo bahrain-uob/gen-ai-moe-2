@@ -1,5 +1,6 @@
 import { Bucket, Function, StackContext } from 'sst/constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import { CfnBucket } from 'aws-cdk-lib/aws-s3'
 
 export function StorageStack({ stack }: StackContext) {
   //Create the Lambda function
@@ -20,22 +21,22 @@ export function StorageStack({ stack }: StackContext) {
         events: ['object_created'],
       },
     },
-    // cdk:{
-    //   bucket:{
-    //     publicReadAccess: false,
-    //     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-    //   }
-    // }
+    cdk:{
+      bucket:{
+        publicReadAccess: false,
+        // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+      }
+    }
   });
 
   const bucket2 = new Bucket(stack, "ExtractedTXT",{
     //blockPublicACLs: true,
-    // cdk:{
-    //   bucket:{
-    //     publicReadAccess: false,
-    //     blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-    //   }
-    // }
+    cdk:{
+      bucket:{
+        publicReadAccess: false,
+        // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+      }
+    }
   });
   notificationFunction.bind([bucket2]);
   // Outputs
