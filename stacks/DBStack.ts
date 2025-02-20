@@ -47,31 +47,31 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
 
   const uploads_bucket = new Bucket(stack, 'Uploads',{
     // blockPublicACLs: true,
-    cdk:{
-          bucket:{
-            publicReadAccess: false,
-            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-          }
-        }
+    // cdk:{
+    //       bucket:{
+    //         publicReadAccess: false,
+    //         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+    //       }
+    //     }
   });
   
   const Polly_bucket = new Bucket(stack, 'Polly',{
     // blockPublicACLs: true,
-    cdk:{
-          bucket:{
-            publicReadAccess: false,
-            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-          }
-        }
+    // cdk:{
+    //       bucket:{
+    //         publicReadAccess: false,
+    //         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+    //       }
+    //     }
   });
   const audiobucket = new Bucket(stack, 'listeningAudios',{
     // blockPublicACLs: true,
-    cdk:{
-          bucket:{
-            publicReadAccess: false,
-            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-          }
-        }
+    // cdk:{
+    //       bucket:{
+    //         publicReadAccess: false,
+    //         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+    //       }
+    //     }
   });
   // const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
   //   this,
@@ -87,8 +87,8 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
       bucket: {
         bucketName: 'speaking-questions-polly',
         bucketArn: 'arn:aws:s3:::speaking-questions-polly',
-        publicReadAccess: false,
-        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+        // publicReadAccess: false,
+        // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
       }
     }
   })

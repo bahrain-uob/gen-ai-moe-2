@@ -16,6 +16,9 @@ export default {
       region: 'us-east-1',
       cdk:{
         publicAccessBlockConfiguration: false,
+      },
+      bootstrap:{
+        useCdkBucket: true,
       }
     };
   },
@@ -38,6 +41,7 @@ export default {
         .stack(ApiStack)
         .stack(FrontendStack)
         //.stack(StorageStack)
+        
     }
   },
 } satisfies SSTConfig;
