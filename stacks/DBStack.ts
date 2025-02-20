@@ -46,14 +46,14 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
 
 
   const uploads_bucket = new Bucket(stack, 'Uploads',{
-    blockPublicACLs: true,
+    // blockPublicACLs: true,
   });
   
   const Polly_bucket = new Bucket(stack, 'Polly',{
-    blockPublicACLs: true,
+    // blockPublicACLs: true,
   });
   const audiobucket = new Bucket(stack, 'listeningAudios',{
-    blockPublicACLs: true,
+    // blockPublicACLs: true,
   });
   // const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
   //   this,
@@ -64,7 +64,7 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   // );
 
   const speakingPollyBucket = new Bucket(stack, 'speakingPolly',{
-    blockPublicACLs: true,
+    // blockPublicACLs: true,
     cdk:{
       bucket: {
         bucketName: 'speaking-questions-polly',
