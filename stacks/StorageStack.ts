@@ -22,7 +22,8 @@ export function StorageStack({ stack }: StackContext) {
     },
     cdk:{
       bucket:{
-        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+        // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+        publicReadAccess: true,
       }
     }
   });
@@ -31,7 +32,8 @@ export function StorageStack({ stack }: StackContext) {
     //blockPublicACLs: true,
     cdk:{
       bucket:{
-        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+        // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+        publicReadAccess: true,
       }
     }
   });
