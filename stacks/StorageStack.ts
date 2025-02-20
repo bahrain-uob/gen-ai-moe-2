@@ -1,4 +1,5 @@
 import { Bucket, Function, StackContext } from 'sst/constructs';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 
 export function StorageStack({ stack }: StackContext) {
   //Create the Lambda function
@@ -12,17 +13,27 @@ export function StorageStack({ stack }: StackContext) {
 
   // Create the S3 bucket and set up notifications
   const bucket = new Bucket(stack, 'BucketTextract', {
-    blockPublicACLs: false,
+    //blockPublicACLs: true,
     notifications: {
       myNotification: {
         function: notificationFunction,
         events: ['object_created'],
       },
     },
+    cdk:{
+      bucket:{
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      }
+    }
   });
 
   const bucket2 = new Bucket(stack, "ExtractedTXT",{
-    blockPublicACLs: false,
+    //blockPublicACLs: true,
+    cdk:{
+      bucket:{
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      }
+    }
   });
   notificationFunction.bind([bucket2]);
   // Outputs
