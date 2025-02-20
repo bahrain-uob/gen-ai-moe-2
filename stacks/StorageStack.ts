@@ -22,7 +22,7 @@ export function StorageStack({ stack }: StackContext) {
     },
     cdk:{
       bucket:{
-        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
       }
     }
   });
@@ -31,7 +31,7 @@ export function StorageStack({ stack }: StackContext) {
     //blockPublicACLs: true,
     cdk:{
       bucket:{
-        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
       }
     }
   });
