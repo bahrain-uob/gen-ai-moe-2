@@ -2,6 +2,7 @@ import { Bucket, Function, StackContext } from 'sst/constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { CfnBucket } from 'aws-cdk-lib/aws-s3'
+import sstConfig from '../sst.config';
 
 export function StorageStack({ stack }: StackContext) {
   //Create the Lambda function
@@ -32,31 +33,12 @@ export function StorageStack({ stack }: StackContext) {
           function: notificationFunction.functionArn,
         },
       ]
-    }
+    },
   });
-  // const gatff = Bucket.import(this, 'MyImportedBucket', { bucketArn: "..."});;
 
-  const bucket2 = new Bucket(stack, "ExtractedTXT",{
-    cdk:{
-      bucket:{
-        blockPublicAccess:{
-          blockPublicAcls: false,
-          blockPublicPolicy: false,
-          ignorePublicAcls: false,
-          restrictPublicBuckets: false,
-        },
-      }
-    }
-    //blockPublicACLs: true,
-    // cdk:{
-    //   bucket:{
-    //     publicReadAccess: false,
-    //     // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-    //   }
-    // }
-  });
-  // const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  notificationFunction.bind([bucket2]);
+  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  //notificationFunction.bind([bucket2]);
+  //notificationFunction.attachPermissions(["s3"]);
   // Outputs
   stack.addOutputs({
     BucketName: bucket.bucketName,

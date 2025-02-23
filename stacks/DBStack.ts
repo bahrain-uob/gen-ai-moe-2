@@ -94,7 +94,7 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   //   }
   // })
   const speakingPollyBucket = new CfnBucket(stack, 'speakingPolly', {
-    bucketName: "speaking-questions-polly",
+    // bucketName: "speaking-questions-polly",
   })
 
   const feedback_table = new Table(stack, 'ResponseFeedback', {
