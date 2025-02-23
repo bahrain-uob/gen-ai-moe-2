@@ -16,9 +16,6 @@ export default {
       region: 'us-east-1',
       cdk:{
         publicAccessBlockConfiguration: false,
-      },
-      bootstrap:{
-        useCdkBucket: true,
       }
     };
   },

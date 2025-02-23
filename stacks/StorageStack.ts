@@ -13,32 +13,43 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   // Create the S3 bucket and set up notifications
-  const bucket = new Bucket(stack, 'BucketTextract', {
-    //blockPublicACLs: true,
-    notifications: {
-      myNotification: {
-        function: notificationFunction,
-        events: ['object_created'],
-      },
-    },
-    cdk:{
-      bucket:{
-        publicReadAccess: false,
-        // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-      }
+  // const bucket = new Bucket(stack, 'BucketTextract', {
+  //   //blockPublicACLs: true,
+  //   notifications: {
+  //     myNotification: {
+  //       function: notificationFunction,
+  //       events: ['object_created'],
+  //     },
+  //   }
+  // });
+
+  const bucket = new CfnBucket(stack, "BucketTextract", {
+    publicAccessBlockConfiguration: {
+      blockPublicAcls: false,
+      blockPublicPolicy: false,
+      ignorePublicAcls: false,
+      restrictPublicBuckets: false,
     }
   });
 
-  const bucket2 = new Bucket(stack, "ExtractedTXT",{
-    //blockPublicACLs: true,
-    cdk:{
-      bucket:{
-        publicReadAccess: false,
-        // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-      }
-    }
+  // const bucket2 = new Bucket(stack, "ExtractedTXT",{
+  //   //blockPublicACLs: true,
+  //   cdk:{
+  //     bucket:{
+  //       publicReadAccess: false,
+  //       // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+  //     }
+  //   }
+  // });
+  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {
+    publicAccessBlockConfiguration: {
+      blockPublicAcls: false,
+      blockPublicPolicy: false,
+      ignorePublicAcls: false,
+      restrictPublicBuckets: false,
+    },
   });
-  notificationFunction.bind([bucket2]);
+  //notificationFunction.bind([bucket2]);
   // Outputs
   stack.addOutputs({
     BucketName: bucket.bucketName,
