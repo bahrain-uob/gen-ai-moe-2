@@ -40,7 +40,7 @@ export function ApiStack({ stack }: StackContext) {
       authorizer: 'jwt',
       function: {
         // Bind the table name to our API
-        bind: [table, bucket, bucket2],
+        bind: [table/*, bucket, bucket2*/],
       },
     },
     authorizers: {
@@ -294,7 +294,7 @@ export function ApiStack({ stack }: StackContext) {
           handler: 'packages/functions/src/s3adminUpload.handler',
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
           environment: {
-            bucket: bucket.bucketName,
+            //bucket: bucket.bucketName,
           },
           timeout: '120 seconds',
         },
@@ -305,7 +305,7 @@ export function ApiStack({ stack }: StackContext) {
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
           environment: {
             speakingPollyBucket: speakingPollyBucket.bucketName,
-            bucket: bucket.bucketName,
+            //bucket: bucket.bucketName,
           },
           timeout: '120 seconds',
         },
@@ -316,7 +316,7 @@ export function ApiStack({ stack }: StackContext) {
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
           environment: {
             speakingPollyBucket: speakingPollyBucket.bucketName,
-            bucket: bucket.bucketName,
+            //bucket: bucket.bucketName,
           },
           timeout: '120 seconds',
         },
