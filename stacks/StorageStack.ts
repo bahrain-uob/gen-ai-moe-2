@@ -1,5 +1,6 @@
 import { Bucket, Function, StackContext } from 'sst/constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { CfnBucket } from 'aws-cdk-lib/aws-s3'
 
 export function StorageStack({ stack }: StackContext) {
@@ -24,12 +25,14 @@ export function StorageStack({ stack }: StackContext) {
   // });
 
   const bucket = new CfnBucket(stack, "BucketTextract", {
-    // publicAccessBlockConfiguration: {
-    //   blockPublicAcls: false,
-    //   blockPublicPolicy: false,
-    //   ignorePublicAcls: false,
-    //   restrictPublicBuckets: false,
-    // }
+    notificationConfiguration: {
+      lambdaConfigurations: [
+        {
+          event: "s3:ObjectCreated:Put",
+          function: notificationFunction.functionArn,
+        },
+      ]
+    }
   });
 
   // const bucket2 = new Bucket(stack, "ExtractedTXT",{
@@ -41,15 +44,8 @@ export function StorageStack({ stack }: StackContext) {
   //     }
   //   }
   // });
-  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {
-    // publicAccessBlockConfiguration: {
-    //   blockPublicAcls: false,
-    //   blockPublicPolicy: false,
-    //   ignorePublicAcls: false,
-    //   restrictPublicBuckets: false,
-    // },
-  });
-  //notificationFunction.bind([bucket2]);
+  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  // notificationFunction.bind([bucket2]);
   // Outputs
   stack.addOutputs({
     BucketName: bucket.bucketName,
