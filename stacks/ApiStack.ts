@@ -40,7 +40,7 @@ export function ApiStack({ stack }: StackContext) {
       authorizer: 'jwt',
       function: {
         // Bind the table name to our API
-        bind: [table/*, bucket, bucket2*/],
+        bind: [table, /*bucket, bucket2*/],
       },
     },
     authorizers: {

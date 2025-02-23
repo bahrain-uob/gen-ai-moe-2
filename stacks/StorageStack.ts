@@ -35,16 +35,16 @@ export function StorageStack({ stack }: StackContext) {
     }
   });
 
-  // const bucket2 = new Bucket(stack, "ExtractedTXT",{
-  //   //blockPublicACLs: true,
-  //   cdk:{
-  //     bucket:{
-  //       publicReadAccess: false,
-  //       // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-  //     }
-  //   }
-  // });
-  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  const bucket2 = new Bucket(stack, "ExtractedTXT",{
+    //blockPublicACLs: true,
+    // cdk:{
+    //   bucket:{
+    //     publicReadAccess: false,
+    //     // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+    //   }
+    // }
+  });
+  // const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
   // notificationFunction.bind([bucket2]);
   // Outputs
   stack.addOutputs({
