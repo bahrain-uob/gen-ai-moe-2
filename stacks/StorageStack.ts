@@ -16,6 +16,11 @@ export function StorageStack({ stack }: StackContext) {
 
   // Create the S3 bucket and set up notifications
   const bucket = new Bucket(stack, 'BucketTextract', {
+    cdk:{
+      bucket:{
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      }
+    },
     //blockPublicACLs: true,
     notifications: {
       myNotification: {
@@ -37,7 +42,13 @@ export function StorageStack({ stack }: StackContext) {
   // });
 
   // const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  const bucket2 = new Bucket(stack, "ExtractedTXT", {});
+  const bucket2 = new Bucket(stack, "ExtractedTXT", {
+    cdk:{
+      bucket:{
+        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      }
+    }
+  });
   //notificationFunction.bind([bucket2]);
   //notificationFunction.attachPermissions(["s3"]);
   // Outputs
