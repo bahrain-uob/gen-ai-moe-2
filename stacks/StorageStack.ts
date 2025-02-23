@@ -24,12 +24,12 @@ export function StorageStack({ stack }: StackContext) {
   // });
 
   const bucket = new CfnBucket(stack, "BucketTextract", {
-    publicAccessBlockConfiguration: {
-      blockPublicAcls: false,
-      blockPublicPolicy: false,
-      ignorePublicAcls: false,
-      restrictPublicBuckets: false,
-    }
+    // publicAccessBlockConfiguration: {
+    //   blockPublicAcls: false,
+    //   blockPublicPolicy: false,
+    //   ignorePublicAcls: false,
+    //   restrictPublicBuckets: false,
+    // }
   });
 
   // const bucket2 = new Bucket(stack, "ExtractedTXT",{
@@ -42,12 +42,12 @@ export function StorageStack({ stack }: StackContext) {
   //   }
   // });
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {
-    publicAccessBlockConfiguration: {
-      blockPublicAcls: false,
-      blockPublicPolicy: false,
-      ignorePublicAcls: false,
-      restrictPublicBuckets: false,
-    },
+    // publicAccessBlockConfiguration: {
+    //   blockPublicAcls: false,
+    //   blockPublicPolicy: false,
+    //   ignorePublicAcls: false,
+    //   restrictPublicBuckets: false,
+    // },
   });
   //notificationFunction.bind([bucket2]);
   // Outputs
