@@ -5,6 +5,16 @@ import { CfnBucket } from 'aws-cdk-lib/aws-s3'
 import sstConfig from '../sst.config';
 
 export function StorageStack({ stack }: StackContext) {
+  const boundary = new iam.ManagedPolicy(stack, "Boundary", {
+    statements: [
+      new iam.PolicyStatement({
+        effect: iam.Effect.DENY,
+        actions: ["s3:PutBucketPublicAccessBlock"],
+        resources: ["*"],
+      }),
+    ],
+  });
+
   //Create the Lambda function
   const notificationFunction = new Function(stack, 'NotificationFunctionPY', {
     handler:
@@ -41,14 +51,9 @@ export function StorageStack({ stack }: StackContext) {
   //   },
   // });
 
-  // const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  const bucket2 = new Bucket(stack, "ExtractedTXT", {
-    cdk:{
-      bucket:{
-        blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      }
-    }
-  });
+  const bucket2 = new Bucket(stack, "ExtractedTXT", {});
+  iam.PermissionsBoundary.of(stack).apply(boundary);
+
   //notificationFunction.bind([bucket2]);
   //notificationFunction.attachPermissions(["s3"]);
   // Outputs
