@@ -15,28 +15,29 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   // Create the S3 bucket and set up notifications
-  // const bucket = new Bucket(stack, 'BucketTextract', {
-  //   //blockPublicACLs: true,
-  //   notifications: {
-  //     myNotification: {
-  //       function: notificationFunction,
-  //       events: ['object_created'],
-  //     },
-  //   }
-  // });
-
-  const bucket = new CfnBucket(stack, "BucketTextract", {
-    notificationConfiguration: {
-      lambdaConfigurations: [
-        {
-          event: "s3:ObjectCreated:Put",
-          function: notificationFunction.functionArn,
-        },
-      ]
-    },
+  const bucket = new Bucket(stack, 'BucketTextract', {
+    //blockPublicACLs: true,
+    notifications: {
+      myNotification: {
+        function: notificationFunction,
+        events: ['object_created'],
+      },
+    }
   });
 
-  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  // const bucket = new CfnBucket(stack, "BucketTextract", {
+  //   notificationConfiguration: {
+  //     lambdaConfigurations: [
+  //       {
+  //         event: "s3:ObjectCreated:Put",
+  //         function: notificationFunction.functionArn,
+  //       },
+  //     ]
+  //   },
+  // });
+
+  // const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  const bucket2 = new Bucket(stack, "ExtractedTXT", {});
   //notificationFunction.bind([bucket2]);
   //notificationFunction.attachPermissions(["s3"]);
   // Outputs
