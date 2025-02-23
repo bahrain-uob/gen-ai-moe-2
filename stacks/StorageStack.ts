@@ -34,8 +34,19 @@ export function StorageStack({ stack }: StackContext) {
       ]
     }
   });
+  // const gatff = Bucket.import(this, 'MyImportedBucket', { bucketArn: "..."});;
 
   const bucket2 = new Bucket(stack, "ExtractedTXT",{
+    cdk:{
+      bucket:{
+        blockPublicAccess:{
+          blockPublicAcls: true,
+          blockPublicPolicy: true,
+          ignorePublicAcls: true,
+          restrictPublicBuckets: true,
+        },
+      }
+    }
     //blockPublicACLs: true,
     // cdk:{
     //   bucket:{
