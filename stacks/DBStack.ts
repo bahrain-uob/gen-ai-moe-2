@@ -20,6 +20,9 @@ export function DBStack(this: any, { stack }: StackContext) {
   });
 
   const table = new Table(stack, 'Records', {
+    cdk:{
+      table:{pointInTimeRecovery: true,}
+    },
     fields: {
       PK: 'string',
       SK: 'string',
@@ -41,6 +44,9 @@ graphlambdafunction.addEnvironment('RECORDS_TABLE', table.tableName);
       SK: 'string', // 'schoolname' will be the sort key
     },
     primaryIndex: { partitionKey: 'PK', sortKey: 'SK' },
+    cdk:{
+      table:{pointInTimeRecovery: true,}
+    }
   });
   // Add the table name as an environment variable to the Lambda function
 graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
@@ -98,6 +104,9 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   })
 
   const feedback_table = new Table(stack, 'ResponseFeedback', {
+    cdk:{
+      table:{pointInTimeRecovery: true,}
+    },
     fields: {
       feedbackId: 'string',
     },
@@ -105,6 +114,9 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   });
   
   const cefrQuestionsTable = new Table(stack, 'CEFRQuestions', {
+    cdk:{
+      table:{pointInTimeRecovery: true,}
+    },
     fields: {
       PK: 'string',
       SK: 'string',
