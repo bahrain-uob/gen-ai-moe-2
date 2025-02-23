@@ -40,10 +40,10 @@ export function StorageStack({ stack }: StackContext) {
     cdk:{
       bucket:{
         blockPublicAccess:{
-          blockPublicAcls: true,
-          blockPublicPolicy: true,
-          ignorePublicAcls: true,
-          restrictPublicBuckets: true,
+          blockPublicAcls: false,
+          blockPublicPolicy: false,
+          ignorePublicAcls: false,
+          restrictPublicBuckets: false,
         },
       }
     }
@@ -56,7 +56,7 @@ export function StorageStack({ stack }: StackContext) {
     // }
   });
   // const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  // notificationFunction.bind([bucket2]);
+  notificationFunction.bind([bucket2]);
   // Outputs
   stack.addOutputs({
     BucketName: bucket.bucketName,
