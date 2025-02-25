@@ -52,6 +52,7 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  notificationFunction.addEnvironment('extractedTXT', bucket2.bucketName as string)
   
   
 
