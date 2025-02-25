@@ -41,14 +41,14 @@ export function StorageStack({ stack }: StackContext) {
   // });
 
   const bucket = new CfnBucket(stack, "BucketTextract", {
-    notificationConfiguration: {
-      lambdaConfigurations: [
-        {
-          event: "s3:ObjectCreated:Put",
-          function: notificationFunction.functionArn,
-        },
-      ]
-    },
+    // notificationConfiguration: {
+    //   lambdaConfigurations: [
+    //     {
+    //       event: "s3:ObjectCreated:Put",
+    //       function: notificationFunction.functionArn,
+    //     },
+    //   ]
+    // },
   });
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
