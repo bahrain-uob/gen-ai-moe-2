@@ -55,12 +55,8 @@ export function StorageStack({ stack }: StackContext) {
   const testbucket = new Bucket(stack, 'MyBucket', {
     cdk: {
       bucket:{
-        blockPublicAccess: new s3.BlockPublicAccess({
-          blockPublicAcls: true,
-          blockPublicPolicy: true,
-          ignorePublicAcls: true,
-          restrictPublicBuckets: true,
-        }),
+        blockPublicAccess: applyPublicAccessBlock.valueAsString === 'true'
+        ? s3.BlockPublicAccess.BLOCK_ALL
       }
     }
   });
