@@ -52,17 +52,9 @@ export function StorageStack({ stack }: StackContext) {
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {
   });
-  const testbucket = new Bucket(stack, 'MyBucket', {
-    cdk: {
-      bucket:{
-        blockPublicAccess: applyPublicAccessBlock.valueAsString === 'true'
-        ? s3.BlockPublicAccess.BLOCK_ALL
-      }
-    }
-  });
 
-  //notificationFunction.bind([bucket2]);
-  //notificationFunction.attachPermissions(["s3"]);
+  // notificationFunction.bind([bucket2]);
+  notificationFunction.attachPermissions([bucket2]);
   // Outputs
   stack.addOutputs({
     BucketName: bucket.bucketName,
