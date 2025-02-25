@@ -54,7 +54,7 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   // notificationFunction.bind([bucket2]);
-  notificationFunction.attachPermissions([bucket2]);
+  // notificationFunction.attachPermissions([bucket2]);
   // Outputs
   stack.addOutputs({
     BucketName: bucket.bucketName,

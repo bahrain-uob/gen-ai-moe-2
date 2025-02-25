@@ -39,7 +39,7 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       authorizer: 'jwt',
       function: {
-        permissions: [bucket, bucket2],
+        // permissions: [bucket, bucket2],
         // Bind the table name to our API
         bind: [table, /*bucket, bucket2*/],
       },
@@ -414,7 +414,7 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       function: {
         bind: [table/*, uploads_bucket*/],
-        permissions: [uploads_bucket,
+        permissions: [/*uploads_bucket,*/
           'bedrock:InvokeModel',
           's3:GetObject',
           'transcribe:StartTranscriptionJob',
