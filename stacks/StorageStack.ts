@@ -21,7 +21,7 @@ export function StorageStack({ stack }: StackContext) {
       'packages/functions/src/extractFunction.handler',
     timeout: 900,
     //runtime: "python3.9", 
-    permissions: ["textract:AmazonTextractFullAccesss","s3:GetObject" ,"textract:StartDocumentAnalysis", "textract:GetDocumentAnalysis" ,"s3:PutObject"],
+    permissions: ["textract:AmazonTextractFullAccesss","s3:GetObject" ,"textract:StartDocumentAnalysis", "textract:GetDocumentAnalysis" ,"s3:PutObject","ssm:PutParameter"],
   });
 
   // Create the S3 bucket and set up notifications
