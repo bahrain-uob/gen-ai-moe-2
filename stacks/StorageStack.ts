@@ -7,12 +7,13 @@ import sstConfig from '../sst.config';
 import { EncryptionConfiguration } from 'aws-cdk-lib/aws-stepfunctions';
 
 export function StorageStack({ stack }: StackContext) {
-  const applyPublicAccessBlock = new CfnParameter(stack, 'ApplyPublicAccessBlock', {
-    type: 'String',
-    default: 'true',  // Default to "true" (public access block applied)
-    allowedValues: ['true', 'false'],
-    description: 'Whether to apply the public access block on the S3 bucket.',
-  });
+
+  // const applyPublicAccessBlock = new CfnParameter(stack, 'ApplyPublicAccessBlock', {
+  //   type: 'String',
+  //   default: 'true',  // Default to "true" (public access block applied)
+  //   allowedValues: ['true', 'false'],
+  //   description: 'Whether to apply the public access block on the S3 bucket.',
+  // });
 
   //Create the Lambda function
   const notificationFunction = new Function(stack, 'NotificationFunctionPY', {
@@ -50,8 +51,9 @@ export function StorageStack({ stack }: StackContext) {
     },
   });
 
-  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {
-  });
+  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  
+  
 
   // notificationFunction.bind([bucket2]);
   // notificationFunction.attachPermissions([bucket2]);
