@@ -52,16 +52,8 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  notificationFunction.attachPermissions(["s3"]);
   notificationFunction.addEnvironment('extractedTXT', bucket2.bucketName as string);
-  const testing = new s3.Bucket(stack, "TestingBucket",{
-    blockPublicAccess:{
-      blockPublicAcls: true,
-      blockPublicPolicy: true,
-      ignorePublicAcls: true,
-      restrictPublicBuckets: true,
-      }
-    }
-  );
   
   
 
