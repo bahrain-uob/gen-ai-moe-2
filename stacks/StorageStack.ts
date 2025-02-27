@@ -21,7 +21,7 @@ export function StorageStack({ stack }: StackContext) {
       'packages/functions/src/extractFunction.handler',
     timeout: 900,
     //runtime: "python3.9", 
-    permissions: ["textract:AmazonTextractFullAccesss","s3:GetObject" ,"textract:StartDocumentAnalysis", "textract:GetDocumentAnalysis" ,"s3:PutObject","ssm:PutParameter"],
+    permissions: ["textract:AmazonTextractFullAccesss","s3:GetObject" ,"textract:StartDocumentAnalysis", "textract:GetDocumentAnalysis" ,"s3:PutObject"],
   });
 
   // Create the S3 bucket and set up notifications
@@ -52,7 +52,16 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  notificationFunction.addEnvironment('extractedTXT', bucket2.bucketName as string)
+  notificationFunction.addEnvironment('extractedTXT', bucket2.bucketName as string);
+  const testing = new s3.Bucket(stack, "TestingBucket",{
+    blockPublicAccess:{
+      blockPublicAcls: true,
+      blockPublicPolicy: true,
+      ignorePublicAcls: true,
+      restrictPublicBuckets: true,
+      }
+    }
+  );
   
   
 
