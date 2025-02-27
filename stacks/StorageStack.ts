@@ -53,8 +53,9 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+  notificationFunction.attachPermissions(["ssm"])
   // Fn.importValue(bucket2.bucketName ? bucket2.bucketName : 'undefined')
-  notificationFunction.addEnvironment('extractedTXT', Fn.importValue(bucket2.bucketName ? bucket2.bucketName : 'undefined'));
+  notificationFunction.addEnvironment('extractedTXT', bucket.bucketName ? bucket.bucketName : 'undefined');
   
   
 
