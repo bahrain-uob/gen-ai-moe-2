@@ -5,6 +5,7 @@ import { CfnBucket } from 'aws-cdk-lib/aws-s3';
 import { CfnParameter } from 'aws-cdk-lib';
 import sstConfig from '../sst.config';
 import { EncryptionConfiguration } from 'aws-cdk-lib/aws-stepfunctions';
+import { Fn } from 'aws-cdk-lib';
 
 export function StorageStack({ stack }: StackContext) {
 
@@ -52,8 +53,8 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  notificationFunction.attachPermissions(["s3"]);
-  notificationFunction.addEnvironment('extractedTXT', bucket2.bucketName as string);
+  // Fn.importValue(bucket2.bucketName ? bucket2.bucketName : 'undefined')
+  notificationFunction.addEnvironment('extractedTXT', Fn.importValue(bucket2.bucketName ? bucket2.bucketName : 'undefined'));
   
   
 
