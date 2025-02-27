@@ -22,7 +22,7 @@ export function StorageStack({ stack }: StackContext) {
       'packages/functions/src/extractFunction.handler',
     timeout: 900,
     //runtime: "python3.9", 
-    permissions: ["textract:AmazonTextractFullAccesss","s3:GetObject" ,"textract:StartDocumentAnalysis", "textract:GetDocumentAnalysis" ,"s3:PutObject"],
+    permissions: ["ssm:PutParameter","textract:AmazonTextractFullAccess","s3:GetObject" ,"textract:StartDocumentAnalysis", "textract:GetDocumentAnalysis" ,"s3:PutObject"],
   });
 
   // Create the S3 bucket and set up notifications
@@ -53,7 +53,8 @@ export function StorageStack({ stack }: StackContext) {
   });
 
   const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  notificationFunction.attachPermissions(["ssm"])
+  console.log(bucket.bucketName);
+  console.log(bucket2.bucketName);
   // Fn.importValue(bucket2.bucketName ? bucket2.bucketName : 'undefined')
   notificationFunction.addEnvironment('extractedTXT', bucket.bucketName ? bucket.bucketName : 'undefined');
   
