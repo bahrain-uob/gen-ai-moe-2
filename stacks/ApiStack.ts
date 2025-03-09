@@ -39,9 +39,8 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       authorizer: 'jwt',
       function: {
-        // permissions: [bucket, bucket2],
         // Bind the table name to our API
-        bind: [table, /*bucket, bucket2*/],
+        bind: [table, speakingPollyBucket, bucket, bucket2],
       },
     },
     authorizers: {
@@ -73,7 +72,7 @@ export function ApiStack({ stack }: StackContext) {
           handler: 'packages/functions/src/generatePresignedUrl.main',
           permissions: ['s3:PutObject'],
           environment: {
-            audioResponseBucket: uploads_bucket.bucketName as string,
+            audioResponseBucket: uploads_bucket.bucketName,
           },
         },
       },
@@ -83,7 +82,7 @@ export function ApiStack({ stack }: StackContext) {
           handler: 'packages/functions/src/speakingRecording.main',
           permissions: ['s3:GetObject'],
           environment: {
-            speakingPollyBucket: speakingPollyBucket.bucketName as string,
+            speakingPollyBucket: speakingPollyBucket.bucketName,
           },
         },
       },
@@ -100,7 +99,7 @@ export function ApiStack({ stack }: StackContext) {
             'dynamodb:PutItem',
           ],
           environment: {
-            speakingUploadBucketName: uploads_bucket.bucketName as string,
+            speakingUploadBucketName: uploads_bucket.bucketName,
             feedbackTableName: feedback_table.tableName,
           },
           timeout: '120 seconds',
@@ -125,7 +124,7 @@ export function ApiStack({ stack }: StackContext) {
           runtime: 'python3.11',
           permissions: ['s3:*', 'polly:SynthesizeSpeech', 'dynamodb:PutItem'],
           timeout: '60 seconds',
-          environment: { Polly_Bucket: Polly_bucket.bucketName as string },
+          environment: { Polly_Bucket: Polly_bucket.bucketName },
         },
       },
       'GET /startTest/{testType}': 'packages/functions/src/startTest.main',
@@ -136,7 +135,7 @@ export function ApiStack({ stack }: StackContext) {
           runtime: 'python3.11',
           permissions: ['s3:*'],
           timeout: '60 seconds',
-          environment: { audioBucket: audiobucket.bucketName as string },
+          environment: { audioBucket: audiobucket.bucketName },
         },
       },
       'GET /getAggregates': {
@@ -269,7 +268,7 @@ export function ApiStack({ stack }: StackContext) {
           permissions: ['dynamodb:PutItem', 'dynamodb:UpdateItem', 'ses:SendEmail'],
           timeout: '120 seconds',
           environment: {
-            s3Bucket: uploads_bucket.bucketName as string,
+            s3Bucket: uploads_bucket.bucketName,
           },
         },
       },
@@ -290,34 +289,34 @@ export function ApiStack({ stack }: StackContext) {
           },
         },
       },
-      'POST /adminUpload': {
+      'POST /fileUpload': {
         function: {
           handler: 'packages/functions/src/s3adminUpload.handler',
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
           environment: {
-            //bucket: bucket.bucketName,
+            bucket: bucket.bucketName,
           },
           timeout: '120 seconds',
         },
       },
-      'POST /adminUploadAudio': {
+      'POST /UploadAudio': {
         function: {
           handler: 'packages/functions/src/s3adminUploadAudio.handler',
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
           environment: {
-            speakingPollyBucket: speakingPollyBucket.bucketName as string,
-            bucket: bucket.bucketName as string,
+            speakingPollyBucket: speakingPollyBucket.bucketName,
+            bucket: bucket.bucketName,
           },
           timeout: '120 seconds',
         },
       },
-      'POST /adminUploadImage': {
+      'POST /UploadImage': {
         function: {
           handler: 'packages/functions/src/s3adminUploadImage.handler',
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
           environment: {
-            speakingPollyBucket: speakingPollyBucket.bucketName as string,
-            bucket: bucket.bucketName as string,
+            speakingPollyBucket: speakingPollyBucket.bucketName,
+            bucket: bucket.bucketName,
           },
           timeout: '120 seconds',
         },
@@ -355,7 +354,7 @@ export function ApiStack({ stack }: StackContext) {
           handler: 'packages/functions/src/approveListening.handler',
           permissions: ['s3:ListBucket', 's3:GetObject', 's3:DeleteObject','s3:PutObject'],
           environment: {
-            speakingPollyBucket: speakingPollyBucket.bucketName as string,
+            speakingPollyBucket: speakingPollyBucket.bucketName,
           },
           timeout: '60 seconds',
         },
@@ -379,7 +378,7 @@ export function ApiStack({ stack }: StackContext) {
           handler: 'packages/functions/src/approveSpeaking.handler',
           permissions: ['s3:ListBucket', 's3:GetObject', 's3:DeleteObject','s3:PutObject'],
           environment: {
-            speakingPollyBucket: speakingPollyBucket.bucketName as string,
+            speakingPollyBucket: speakingPollyBucket.bucketName,
           },
           timeout: '60 seconds',
         },
@@ -389,7 +388,7 @@ export function ApiStack({ stack }: StackContext) {
           handler:'packages/functions/src/getAudioFiles.handler',
           permissions:['s3:ListBucket','s3:GetObject'],
           environment: {
-            speakingPollyBucket: speakingPollyBucket.bucketName as string,
+            speakingPollyBucket: speakingPollyBucket.bucketName,
           },
           timeout: '60 seconds'
         },
@@ -413,15 +412,15 @@ export function ApiStack({ stack }: StackContext) {
   const webSocket = new WebSocketApi(stack, 'WebSocketApi', {
     defaults: {
       function: {
-        bind: [table/*, uploads_bucket*/],
-        permissions: [/*uploads_bucket,*/
+        bind: [table, uploads_bucket],
+        permissions: [
           'bedrock:InvokeModel',
           's3:GetObject',
           'transcribe:StartTranscriptionJob',
           'transcribe:GetTranscriptionJob',
         ],
         environment: {
-          speakingPollyBucket: speakingPollyBucket.bucketName as string,
+          speakingPollyBucket: speakingPollyBucket.bucketName,
           grammerToolDNS: grammarToolDNS,
         },
       },
@@ -500,7 +499,7 @@ export function ApiStack({ stack }: StackContext) {
             'dynamodb:PutItem',
           ],
           environment: {
-            speakingUploadBucketName: uploads_bucket.bucketName as string,
+            speakingUploadBucketName: uploads_bucket.bucketName,
             feedbackTableName: feedback_table.tableName,
           },
           timeout: '120 seconds',
@@ -517,7 +516,7 @@ export function ApiStack({ stack }: StackContext) {
             'dynamodb:PutItem',
           ],
           environment: {
-            speakingUploadBucketName: uploads_bucket.bucketName as string,
+            speakingUploadBucketName: uploads_bucket.bucketName,
             feedbackTableName: feedback_table.tableName,
           },
           timeout: '120 seconds',

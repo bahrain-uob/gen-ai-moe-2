@@ -36,7 +36,7 @@ const UploadReading = ({ hideLayout }: UploadReadingProps) => {
         await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUpload?section=${encodeURIComponent('Reading')}`,
+            path: `/fileUpload?section=${encodeURIComponent('Reading')}`,
             options: { body: readingFormData },
           }),
         );

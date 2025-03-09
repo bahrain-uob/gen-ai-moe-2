@@ -11,8 +11,8 @@ const s3 = new S3();
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   console.log("events:" , event.body);
-  const sourceBucket = "speaking-questions-polly";
-  const destinationBucket = "speaking-questions-polly";
+  const sourceBucket = Bucket.speakingPolly.bucketName;
+  const destinationBucket = Bucket.speakingPolly.bucketName;
   let listIDs = []
    for (let i = 0; i<7; i++){
             let currentID = uuidv4()

@@ -41,26 +41,47 @@ export function StorageStack({ stack }: StackContext) {
   //   }
   // });
 
-  const bucket = new CfnBucket(stack, "BucketTextract", {
-    // notificationConfiguration: {
-    //   lambdaConfigurations: [
-    //     {
-    //       event: "s3:ObjectCreated:Put",
-    //       function: notificationFunction.functionArn,
-    //     },
-    //   ]
-    // },
-  });
+  // const bucket = new CfnBucket(stack, "BucketTextract", {
+  //   // notificationConfiguration: {
+  //   //   lambdaConfigurations: [
+  //   //     {
+  //   //       event: "s3:ObjectCreated:Put",
+  //   //       function: notificationFunction.functionArn,
+  //   //     },
+  //   //   ]
+  //   // },
+  // });
 
-  const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
-  console.log(bucket.bucketName);
-  console.log(bucket2.bucketName);
-  // Fn.importValue(bucket2.bucketName ? bucket2.bucketName : 'undefined')
-  notificationFunction.addEnvironment('extractedTXT', bucket.bucketName ? bucket.bucketName : 'undefined');
+  //const bucket2 = new CfnBucket(stack, "ExtractedTXT", {});
+
+  const bucket = new Bucket(stack, "BucketTextract", {
+    cdk: {
+      bucket: new s3.Bucket(stack, "BucketTextractBucket", {
+        encryption: s3.BucketEncryption.S3_MANAGED,
+        publicReadAccess: false,
+      }),
+    },
+    notifications: {
+      myNotification: {
+        function: notificationFunction,
+        events: ['object_created'],
+      },
+    },
+  })
+
+  const bucket2 = new Bucket(stack, "ExtractedTXT", {
+    cdk: {
+      bucket: new s3.Bucket(stack, "ExtractedTXTBucket", {
+        encryption: s3.BucketEncryption.S3_MANAGED,
+        publicReadAccess: false,
+    })
+    }
+  })
   
   
+  
 
-  // notificationFunction.bind([bucket2]);
+  notificationFunction.bind([bucket2]);
   // notificationFunction.attachPermissions([bucket2]);
   // Outputs
   stack.addOutputs({

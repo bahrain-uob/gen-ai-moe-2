@@ -1,4 +1,7 @@
 import { Fn } from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import {
   AllowedMethods,
   OriginProtocolPolicy,
@@ -28,6 +31,9 @@ export function FrontendStack({ stack, app }: StackContext) {
       VITE_WEBSOCKET_URL: webSocket.url,
     },
     cdk: {
+      bucket: new s3.Bucket(stack, "StaticSite",{
+        encryption: s3.BucketEncryption.S3_MANAGED,
+        publicReadAccess: false,}),
       distribution: {
         additionalBehaviors: {
           '/api/*': {
@@ -47,8 +53,12 @@ export function FrontendStack({ stack, app }: StackContext) {
     },
   });
 
+
   // Show the URLs in the output
   stack.addOutputs({
     SiteUrl: site.url,
   });
+  return {
+    site
+  }
 }

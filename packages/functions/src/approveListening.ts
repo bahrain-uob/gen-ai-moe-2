@@ -26,8 +26,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           p1Question = parsedBody.validSections[0]
           console.log("Questions?:", p1Question)
           console.log("Can we get the choices?:", parsedBody.validSections[0].choices )
-          const sourceBucket = "speaking-questions-polly";
-            const destinationBucket = "speaking-questions-polly";
+          const sourceBucket = Bucket.speakingPolly.bucketName;
+            const destinationBucket = Bucket.speakingPolly.bucketName;
             let listIDs = []
             for (let i = 0; i<4; i++){
                      let currentID = uuidv4()

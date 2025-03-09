@@ -42,7 +42,7 @@ const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
         await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUploadImage?section=${encodeURIComponent(section)}`,
+            path: `/UploadImage?section=${encodeURIComponent(section)}`,
             options: { body: imageFormData },
           }),
         );
@@ -56,7 +56,7 @@ const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
         await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUpload?section=${encodeURIComponent(section)}`,
+            path: `/fileUpload?section=${encodeURIComponent(section)}`,
             options: { body: questionFormData },
           }),
         );

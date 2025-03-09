@@ -28,8 +28,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       let p2Question;
       console.log("events:" , event.body);
       const parsedBody = JSON.parse(event.body)
-      const sourceBucket = "speaking-questions-polly";
-      const destinationBucket = "speaking-questions-polly";
+      const sourceBucket = Bucket.speakingPolly.bucketName;
+      const destinationBucket = Bucket.speakingPolly.bucketName;
       let listIDs = []
         for (let i = 0; i<1; i++){
           let currentID = uuidv4()

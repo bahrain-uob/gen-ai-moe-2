@@ -9,6 +9,6 @@
   "devDependencies": {
     "vitest": "^0.34.4",
     "@types/node": "^20.6.0",
-    "sst": "2.40.3"
+    "sst": "2.44.0"
   }
 }

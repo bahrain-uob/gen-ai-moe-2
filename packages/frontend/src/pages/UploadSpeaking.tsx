@@ -48,7 +48,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
         const audioResponse = await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUploadAudio?section=${encodeURIComponent(section)}`,
+            path: `/UploadAudio?section=${encodeURIComponent(section)}`,
             options: { body: audioFormData },
           }),
         );
@@ -64,7 +64,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
         const questionResponse = await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUpload?section=${encodeURIComponent(section)}`,
+            path: `/fileUpload?section=${encodeURIComponent(section)}`,
             options: { body: questionFormData },
           }),
         );

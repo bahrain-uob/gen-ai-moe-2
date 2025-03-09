@@ -12,8 +12,8 @@ export const handler: APIGatewayProxyHandler = async event => {
   //   speakingPollyBucket
   // } = use(DBStack);
   
-  const bucketName = 'speaking-questions-polly'
-
+  const bucketName = Bucket.speakingPolly.bucketName;
+  
   if (!event.body || !event.headers['content-type']) {
     return {
       statusCode: 400,

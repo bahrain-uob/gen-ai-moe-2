@@ -7,7 +7,7 @@ import * as s3Cfn from 'aws-cdk-lib/aws-s3';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager';
 import * as path from 'path';
-import { Fn, RemovalPolicy, listMapper } from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
 // import AWS from 'aws-sdk';
 
 export function DBStack(this: any, { stack }: StackContext) {
@@ -46,34 +46,33 @@ graphlambdafunction.addEnvironment('RECORDS_TABLE', table.tableName);
 graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
 
 
-  const uploads_bucket = new CfnBucket(stack, 'Uploads',{
-    // blockPublicACLs: true,
-    // cdk:{
-    //       bucket:{
-    //         publicReadAccess: false,
-    //         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-    //       }
-    //     }
-  });
+  const uploads_bucket = new Bucket(stack, "Uploads", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "UploadsBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+      })
+      }
+    });
   
-  const Polly_bucket = new CfnBucket(stack, 'Polly',{
-    // blockPublicACLs: true,
-    // cdk:{
-    //       bucket:{
-    //         publicReadAccess: false,
-    //         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-    //       }
-    //     }
-  });
-  const audiobucket = new CfnBucket(stack, 'listeningAudios',{
-    // blockPublicACLs: true,
-    // cdk:{
-    //       bucket:{
-    //         publicReadAccess: false,
-    //         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
-    //       }
-    //     }
-  });
+  const Polly_bucket = new Bucket(stack, "Polly", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "PollyBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+      })
+      }
+    })
+
+  const audiobucket = new Bucket(stack, "listeningAudios", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "listeningAudiosBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+      })
+      }
+    })
+    
   // const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
   //   this,
   //   'speakingPolly',
@@ -93,9 +92,22 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   //     }
   //   }
   // })
-  const speakingPollyBucket = new CfnBucket(stack, 'speakingPolly', {
-    //bucketName: "speaking-questions-polly",
-  })
+  const speakingPollyBucket = new Bucket(stack, "speakingPolly", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "speakingPollyBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+          cors: [
+            {
+              allowedOrigins: ['*'], // Allow requests from any origin
+              allowedMethods: [s3.HttpMethods.GET], // Allow GET, POST, and PUT methods
+              allowedHeaders: ['*'], // Allow all headers
+            },
+          ],
+      }),
+      }
+    })
+
 
   const feedback_table = new Table(stack, 'ResponseFeedback', {
     fields: {
@@ -168,6 +180,7 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   //     },
   //   });
   // }
+  
 
   // Output database name
   stack.addOutputs({
