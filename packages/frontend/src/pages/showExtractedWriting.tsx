@@ -18,6 +18,7 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [audioUrls, setAudioUrls] = useState<string | null>(null);
+  var audioS3Urls : string = 'undefined';
   
   const sectionName = window.location.pathname?.split('/').pop()?.replace('showExtracted', '') || '';
 
@@ -88,6 +89,9 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
 
   if (audioUrls && audioUrls.length > 0) {
   console.log(audioUrls)
+  const presignedindex = audioUrls.indexOf('?X-Amz')
+  audioS3Urls = audioUrls.substring(0,presignedindex);
+  console.log("To Be Approved Url:", audioS3Urls)
 }
 
   }, [audioUrls]); // Add audioUrls as a dependency
@@ -109,7 +113,7 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
       const validSections = sections.filter((content) => content !== null && content.trim() !== "");
       const payload = {
         validSections,
-        audioUrls, // Ensure `audioUrls` is defined in your component or state
+        audioS3Urls, // Ensure `audioUrls` is defined in your component or state
       };
   
       // Send the gathered content to your Lambda function

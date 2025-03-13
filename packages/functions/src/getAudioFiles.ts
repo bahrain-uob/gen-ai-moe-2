@@ -76,6 +76,23 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
       preSignedUrls.push(presignedUrl);
     }
+       mp3Files = response.Contents?.filter(
+      (object) => /*object.Key?.endsWith(".mp3") &&*/ object.Key?.includes(userID)
+    )
+      .map((object) => `${BUCKET_URL}${object.Key}`) // Generate full URLs
+      .slice(0, fileLimit); // Limit to the required number of files
+
+    console.log("The audio files are: ", mp3Files);
+
+    if(mp3Files != null){
+    for(var i = 0 ; i < mp3Files.length ; i++){
+      preSignedUrls.push(mp3Files[i])
+    }}else{
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: "Error fetching objects from S3" }),
+      };
+    }
     mp3Files = preSignedUrls;
   }
   else{

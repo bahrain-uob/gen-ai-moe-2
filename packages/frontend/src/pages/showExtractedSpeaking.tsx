@@ -18,6 +18,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [audioUrls, setAudioUrls] = useState<string[] | null>(null);
+  const audioS3Urls : string[] = [];
 
   const wavesurferRefs = useRef<(WaveSurfer | null)[]>([]);  // Ref to store WaveSurfer instances for each audio file
   //const [isPlaying, setIsPlaying] = useState(false);
@@ -90,7 +91,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
   if (audioUrls && audioUrls.length > 0) {
   for (let index = 0; index < audioUrls.length; index++) {
     
-
+    if(index < 7){
     const url = audioUrls[index];
     const waveSurferInstance = WaveSurfer.create({
       container: `#wavesurfer-container-${index}`,
@@ -104,6 +105,10 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
 
     wavesurferRefs.current[index] = waveSurferInstance; // Store instance for each URL
     waveSurferInstance.load(url);
+  }else{
+    audioS3Urls.push(audioUrls[index])
+    console.log("S3 Returned Urls", audioS3Urls)
+  }
   }
 }
 
@@ -185,7 +190,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
       });
       
     
-      const validSections = [ sections.filter((content) => content !== null && content.trim() !== ""), audiosDesc.filter((content) => content !== null && content.trim() !== ""), audioUrls ]
+      const validSections = [ sections.filter((content) => content !== null && content.trim() !== ""), audiosDesc.filter((content) => content !== null && content.trim() !== ""), audioS3Urls ]
       console.log(validSections)
       // Send the gathered data to your Lambda function
       const response = await post({
@@ -304,7 +309,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
         }}
       >
         {audioUrls &&
-          audioUrls.map((url, index) => (
+          audioUrls.map((url, index) => index < 7 && (
             console.log(url),
             <div
               key={index}

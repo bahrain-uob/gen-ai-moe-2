@@ -21,6 +21,7 @@ const [feedback, setFeedback] = useState<string>("");
 const [fileContent, setFileContent] = useState<string | null>(null);
 const [error, setError] = useState<string | null>(null);
 const [audioUrls, setAudioUrls] = useState<string[] | null>(null);
+var audioS3Urls: string[] = [];
 const wavesurferRefs = useRef<(WaveSurfer | null)[]>([]);  // Ref to store WaveSurfer instances for each audio file
 
   
@@ -92,8 +93,9 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
   useEffect(() => {
     // Initialize WaveSurfer instances for each audio URL
   if (audioUrls && audioUrls.length > 0) {
-  for (let index = 0; index < audioUrls.length; index++) {
+  for (let index = 0; index < audioUrls.length; index++) { //audioUrls is expected to always be of length 8
 
+    if (index < 4){
     const url = audioUrls[index];
     const waveSurferInstance = WaveSurfer.create({
       container: `#wavesurfer-container-${index}`,
@@ -107,6 +109,10 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
 
     wavesurferRefs.current[index] = waveSurferInstance; // Store instance for each URL
     waveSurferInstance.load(url);
+  }else{ // Do this only once tto save all 
+    audioS3Urls.push(audioUrls[index])
+    console.log("S3 Returned Urls", audioS3Urls)
+  }
   }
 }
 
@@ -165,7 +171,7 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
           // Send the gathered data to your Lambda function
           const requestData = {
             validSections,
-            audioUrls,
+            audioS3Urls,
           };
           const response = await post({
             apiName: "myAPI",
@@ -386,7 +392,7 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
         }}
       >
         {audioUrls &&
-          audioUrls.map((url, index) => (
+          audioUrls.map((url, index) => index < 4 && (
             console.log(url),
             <div
               key={index}

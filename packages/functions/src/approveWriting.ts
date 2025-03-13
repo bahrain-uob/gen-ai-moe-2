@@ -52,11 +52,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           
       
         }
-      // Extract only the key from the audioUrls URL
-      if (parsedBody.audioUrls) {
-        parsedBody.audioUrls = parsedBody.audioUrls.split('/').pop()!;
+      // Extract only the key from the audioS3Urls URL
+      if (parsedBody.audioS3Urls) {
+        parsedBody.audioS3Urls = parsedBody.audioS3Urls.split('/').pop()!;
       }
-      console.log("The image key is:",  parsedBody.audioUrls)
+      console.log("The image key is:",  parsedBody.audioS3Urls)
 
       p1Question = parsedBody.validSections[0]
       p2Question = parsedBody.validSections[1]
@@ -91,7 +91,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
        }
        console.log("OUR id: ", id)
        console.log("list of ids: " , listIDs)
-       console.log("the image we got:" , parsedBody.audioUrls)
+       console.log("the image we got:" , parsedBody.audioS3Urls)
         transactItems.push({
           Put: {
             TableName: tableName,
@@ -101,7 +101,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                 P1: {
                     M: {
                         GraphDescription: { S: "This is a description" },
-                        GraphKey: { S: `${listIDs[0]}.${parsedBody.audioUrls.split('.').pop()}` },
+                        GraphKey: { S: `${listIDs[0]}.${parsedBody.audioS3Urls.split('.').pop()}` },
                         Question: { S: p1Question },
                     },
                 },
@@ -165,7 +165,7 @@ const response = await dynamodb.transactWriteItems(transactParams).promise();
     };
   }
   
-  const objectKey = `unApproved/Writing/${parsedBody.audioUrls}`; // The original object key
+  const objectKey = `unApproved/Writing/${parsedBody.audioS3Urls}`; // The original object key
   const fileType = objectKey.split('.').pop()
   const idKey = listIDs[0]
   const newObjectKey = `${idKey}.${fileType}`; // New destination object key
