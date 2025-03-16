@@ -5,6 +5,8 @@ import DropzoneListeningQfiles from '../components/DropzoneListeningQfiles';
 import '../components/AdminStyle/Upload.css';
 import { post } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 
 interface UploadSpeakingProps {
@@ -21,6 +23,9 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
   const [questionFile, setQuestionFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // Track if form is submitted
+  const handleToastClose = () => {
+    window.location.href = "/showExtractedSpeaking";
+  };
 
   // Callback to collect the multiple audio files from DropzoneAudio
   const handleAudioFiles = (files: File[]) => setAudioFiles(files);
@@ -75,12 +80,18 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
       const allSuccessful = allUploadsSuccessful.every(success => success);
       setUploadStatus(
         allSuccessful
-          ? 'files uploaded successfully!'
+          ? 'Uploaded successfully!'
           : 'Some files failed to upload.',
       );
       setIsSubmitted(true); // Mark form as submitted
+      toast.success(`Uploaded successfully!: Extracting...`, {
+              autoClose: 10000,
+              onClose: handleToastClose, // Redirect to Extracted Page
+            })
+
     } catch (error) {
       setUploadStatus(`Upload failed: ${(error as Error).message}`);
+      toast.error(`Upload failed: ${(error as Error).message}`, {});
     }
   };
 
@@ -88,6 +99,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
     <div className="upload-page">
       {/* Conditionally render Nav component based on hideLayout */}
       {!hideLayout && <Nav entries={navLinks} />}
+      <ToastContainer />
       <div className="container">
         <div className="upload-section">
           <h1 className="page-title">Upload Your Speaking Files</h1>
@@ -126,17 +138,29 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
             </Link>
           </div>
 
+          {uploadStatus && uploadStatus.startsWith('Uploaded successfully') && (
+            <p
+              className={`upload-status success}`}
+            >
+              {toast.success(`${uploadStatus}: Extracting...`, {
+                autoClose: 10000,
+                onClose: handleToastClose, // Redirect to Extracted Page
+              })
+              }
+            </p>
+          )}
+
           {uploadStatus && (
             <p
               className={`upload-status ${
-                uploadStatus.startsWith('All files uploaded successfully')
+                uploadStatus.startsWith('Uploaded successfully')
                   ? 'success'
                   : 'error'
               }`}
             >
-              {uploadStatus}
             </p>
           )}
+
         </div>
       </div>
     </div>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { get } from "aws-amplify/api";
 import { post } from 'aws-amplify/api';
 //import { Nav } from '../components/Nav'; // Correct import for Nav
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // interface UploadListeningProps {
 //   hideLayout?: boolean; // Adding the hideLayout prop
@@ -80,6 +82,7 @@ const ReadingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
   let pass3 = ""
   const approving = async (e: React.FormEvent) => {
     e.preventDefault();
+    var unAnswered: string[] = [];
     let validInput = true;
   
     try {
@@ -98,7 +101,8 @@ const ReadingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
         // Gather selected answers
         const selectedAnswer = (section.querySelector("input[type='radio']:checked") as HTMLInputElement)?.value || null;
         if(question && !selectedAnswer){
-          alert(`Please selected the correct answer for \"${question}\"`)
+          //alert(`Please selected the correct answer for \"${question}\"`)
+          unAnswered.push(question[0] + (question[1] == '.' ? '' : question[1]))
           validInput = false;
         }
   
@@ -120,7 +124,8 @@ const ReadingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
           // Gather selected answers
           const selectedAnswer = (section.querySelector("input[type='radio']:checked") as HTMLInputElement)?.value || null;
           if(question && !selectedAnswer){
-            alert(`Please selected the correct answer for \"${question}\"`)
+            //alert(`Please selected the correct answer for \"${question}\"`)
+            unAnswered.push(question[0] + (question[1] == '.' ? '' : question[1]))
             validInput = false;
           }
     
@@ -142,7 +147,8 @@ const ReadingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
             // Gather selected answers
             const selectedAnswer = (section.querySelector("input[type='radio']:checked") as HTMLInputElement)?.value || null;
             if(question && !selectedAnswer){
-              alert(`Please selected the correct answer for \"${question}\"`)
+              //alert(`Please selected the correct answer for \"${question}\"`)
+              unAnswered.push(question[0] + (question[1] == '.' ? '' : question[1]))
               validInput = false;
             }
       
@@ -170,12 +176,18 @@ const ReadingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
   
       console.log("Approve response:", response);
 
-      alert("Questions Saved Successfully!")
-      // Redirect to admin landing page
-      window.location.href = "/admin-home";
+      const handleToastClose = () => {
+         window.location.href = "/admin-home";
+      };
+
+      toast.success(`Questions Uploaded Successfully!`, {
+        onClose: handleToastClose, // Redirect to admin landing page
+      });
+      
     }else{
     if(buttonApprove)
       buttonApprove.disabled = false;
+    toast.error(`Please Select Answers for all Questions: ${unAnswered}`, {});
     }
     } catch (error) {
       console.error(`Approve failed: ${(error as Error).message}`);
@@ -455,6 +467,7 @@ const ReadingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
         backgroundColor: "#f8f9fa",
       }}
     >
+      <ToastContainer />
       <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333" }}>
         Here is the extracted file:
       </h1>

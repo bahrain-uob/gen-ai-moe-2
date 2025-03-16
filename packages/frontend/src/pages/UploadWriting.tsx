@@ -6,6 +6,8 @@ import { post } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
 import DropzoneImageFiles from '../components/DropzoneImagefiles';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface UploadWritingProps {
   hideLayout?: boolean;
@@ -21,6 +23,9 @@ const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
   const [questionFile, setQuestionFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const handleToastClose = () => {
+    window.location.href = "/showExtractedWriting";
+  };
 
   // Callback to collect the image file from DropzoneImage
   const handleImageFile = (file: File | null) => setImageFile(file);
@@ -62,10 +67,16 @@ const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
         );
       }
 
-      setUploadStatus('Upload successfully!');
+      setUploadStatus('Uploaded successfully!');
       setIsSubmitted(true);
+      toast.success(`Uploaded successfully!: Extracting...`, {
+        autoClose: 10000,
+        onClose: handleToastClose, // Redirect to Extracted Page
+      })
+
     } catch (error) {
       setUploadStatus(`Upload failed: ${(error as Error).message}`);
+      toast.error(`Upload failed: ${(error as Error).message}`, {});
     }
   };
 
@@ -73,6 +84,7 @@ const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
     <div className="upload-page">
       {/* Conditionally render Nav component based on hideLayout */}
       {!hideLayout && <Nav entries={navLinks} />}
+      <ToastContainer />
       {/* Conditionally render Nav */}
       <div className="container">
         <div className="upload-section">
@@ -115,14 +127,14 @@ const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
           {uploadStatus && (
             <p
               className={`upload-status ${
-                uploadStatus.startsWith('Upload successfully')
+                uploadStatus.startsWith('Uploaded successfully')
                   ? 'success'
                   : 'error'
               }`}
             >
-              {uploadStatus}
             </p>
           )}
+
         </div>
       </div>
     </div>

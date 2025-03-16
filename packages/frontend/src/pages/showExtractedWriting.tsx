@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { get } from "aws-amplify/api";
 import { post } from 'aws-amplify/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 //import { toJSON } from '../utilities';
 //import { Nav } from '../components/Nav'; // Correct import for Nav
 
@@ -124,9 +126,15 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
       });
   
       console.log("Approve response:", response);
-      alert("Questions Saved Successfully!")
-      // Redirect to admin landing page
-      window.location.href = "/admin-home";
+
+      const handleToastClose = () => {
+        window.location.href = "/admin-home";
+      };
+
+      toast.success(`Questions Uploaded Successfully!`, {
+        onClose: handleToastClose, // Redirect to admin landing page
+      });
+
     } catch (error) {
       console.error("Approve failed:", (error as Error).message);
       const buttonApprove = document.getElementById("btnApprove") as HTMLButtonElement | null;
@@ -194,6 +202,7 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
         backgroundColor: "#f8f9fa",
       }}
     >
+      <ToastContainer />
       <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333" }}>
         Here is the extracted file:
       </h1>

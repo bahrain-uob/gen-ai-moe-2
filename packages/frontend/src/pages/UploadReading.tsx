@@ -4,6 +4,8 @@ import Dropzone from '../components/Dropzone';
 import '../components/AdminStyle/Upload.css';
 import { post } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 
 interface UploadReadingProps {
@@ -19,6 +21,9 @@ const UploadReading = ({ hideLayout }: UploadReadingProps) => {
   const [readingFile, setReadingFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // Track if form is submitted
+  const handleToastClose = () => {
+    window.location.href = "/showExtractedReading";
+  };
 
   // Callback to collect the reading file from Dropzone
   const handleReadingFile = (file: File | null) => setReadingFile(file);
@@ -42,10 +47,16 @@ const UploadReading = ({ hideLayout }: UploadReadingProps) => {
         );
       }
 
-      setUploadStatus('Upload successfully!');
+      setUploadStatus('Uploaded successfully!');
       setIsSubmitted(true); // Mark the form as submitted
+      toast.success(`Uploaded successfully!: Extracting...`, {
+              autoClose: 10000,
+              onClose: handleToastClose, // Redirect to Extracted Page
+            })
+
     } catch (error) {
       setUploadStatus(`Upload failed: ${(error as Error).message}`);
+      toast.error(`Upload failed: ${(error as Error).message}`, {});
     }
   };
 
@@ -54,6 +65,7 @@ const UploadReading = ({ hideLayout }: UploadReadingProps) => {
       {/* Use Nav component here */}
       {!hideLayout && <Nav entries={navLinks} />}
       {/* Conditionally render Nav based on hideLayout */}
+      <ToastContainer />
       <div className="container">
         <div className="upload-section">
           <h1 className="page-title">Upload Your Reading Files</h1>
@@ -89,14 +101,14 @@ const UploadReading = ({ hideLayout }: UploadReadingProps) => {
           {uploadStatus && (
             <p
               className={`upload-status ${
-                uploadStatus.startsWith('Upload successfully')
+                uploadStatus.startsWith('Uploaded successfully')
                   ? 'success'
                   : 'error'
               }`}
             >
-              {uploadStatus}
             </p>
           )}
+
         </div>
       </div>
     </div>

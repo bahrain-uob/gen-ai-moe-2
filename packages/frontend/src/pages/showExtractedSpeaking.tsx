@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { get } from "aws-amplify/api";
 import { post } from 'aws-amplify/api';
 import WaveSurfer from "wavesurfer.js";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 //import { Nav } from '../components/Nav'; // Correct import for Nav
 
 // interface UploadListeningProps {
@@ -201,9 +203,14 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
   
       console.log("Approve response:", response);
 
-      alert("Questions Saved Successfully!")
-      // Redirect to admin landing page
-      window.location.href = "/admin-home";
+      const handleToastClose = () => {
+        window.location.href = "/admin-home";
+      };
+
+      toast.success(`Questions Uploaded Successfully!`, {
+        onClose: handleToastClose, // Redirect to admin landing page
+      });
+
     } catch (error) {
       console.error(`Approve failed: ${(error as Error).message}`);
       const buttonApprove = document.getElementById("btnApprove") as HTMLButtonElement | null;
@@ -227,6 +234,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
         backgroundColor: "#f8f9fa",
       }}
     >
+      <ToastContainer />
       <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333" }}>
         Here is the extracted file:
       </h1>
