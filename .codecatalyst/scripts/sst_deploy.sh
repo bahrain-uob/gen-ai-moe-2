@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
 echo "Deploying project"
 
-if [ -f ../.env ]; then
-  echo ".env file found at ../.env"
-  source ../.env
-elif [ -f $HOME/.env ]; then
-  echo ".env file found at $HOME/.env"
+if [ -f ./.env ]; then
+  echo ".env file found in the current directory"
+  source ./.env
 else
-  echo ".env file not found :("
-  echo "Current working directory: $(pwd)"
+  echo ".env file not found in the current directory"
 fi
 
-source ~/.bashrc
+#source ~/.bashrc
 nohup dockerd &
 docker version
 npm install
