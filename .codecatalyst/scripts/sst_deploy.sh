@@ -10,6 +10,7 @@ nohup dockerd &
 docker version
 npm install
 npm audit fix
+echo aws://$AWS_ACCOUNT_ID/us-east-1
 npx cdk bootstrap aws://$AWS_ACCOUNT_ID/us-east-1 --force \
   --cloudformation-execution-policies arn:aws:iam::$AWS_ACCOUNT_ID:policy/Cdk_Least \
   --no-public-access-block-configuration
