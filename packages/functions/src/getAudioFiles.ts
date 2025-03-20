@@ -18,8 +18,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   // } = use(DBStack);
   
   const BUCKET_NAME = Bucket.speakingPolly.bucketName;
-  const REGION = "us-east-1"; // The region of your bucket
+  const REGION = process.env.AWS_REGION ?? "us-east-1"; // The region of your bucket
   const BUCKET_URL = `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/`;
+  console.log("Dynamic Region:", process.env.AWS_REGION)
 
   try {
     const currentSection = event.queryStringParameters?.section;
