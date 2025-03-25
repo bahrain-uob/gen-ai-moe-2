@@ -89,11 +89,11 @@ export const Nav: React.FC<NavProps> = props => {
     </Link>
   ));
 
-  links.push(
-    <Link className={itemStyle} to="/achievements">
-      <div>Achievements</div>
-    </Link>
-  );
+  // links.push(
+  //   <Link className={itemStyle} to="/achievements">
+  //     <div>Achievements</div>
+  //   </Link>
+  // );
 
   return (
     <header className="z-10 w-full">
@@ -132,13 +132,13 @@ const MobileMenu = ({
     </button>
   ));
 
-  links.push(
-    <button key="achievements" onClick={toggleMenu}>
-      <Link className={itemStyle} to="/achievements">
-        <div>Achievements</div>
-      </Link>
-    </button>
-  );
+  // links.push(
+  //   <button key="achievements" onClick={toggleMenu}>
+  //     <Link className={itemStyle} to="/achievements">
+  //       <div>Achievements</div>
+  //     </Link>
+  //   </button>
+  // );
 
   return (
     <>

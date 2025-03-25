@@ -35,7 +35,8 @@ export const Layout = ({
           ? []
           : [
               { text: 'Full Exams', to: '/Full-Exam' },
-              { text: 'Section Exams', to: '/Sections' },
+              { text: 'Achievements', to: '/achievements' },
+              //{ text: 'Section Exams', to: '/Sections' },
             ]),
         { text: 'Exercises', to: '/Exercises' },
       ];
