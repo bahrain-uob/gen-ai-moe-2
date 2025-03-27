@@ -50,7 +50,7 @@ const UploadReading = ({ hideLayout }: UploadReadingProps) => {
       setUploadStatus('Uploaded successfully!');
       setIsSubmitted(true); // Mark the form as submitted
       toast.success(`Uploaded successfully!: Extracting...`, {
-              autoClose: 10000,
+              autoClose: 20000,
               onClose: handleToastClose, // Redirect to Extracted Page
             })
 
