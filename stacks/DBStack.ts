@@ -51,6 +51,13 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
         bucket: new s3.Bucket(stack, "UploadsBucket", {
           encryption: s3.BucketEncryption.S3_MANAGED,
           publicReadAccess: false,
+          cors: [
+            {
+              allowedOrigins: ['*'], // Allow requests from any origin
+              allowedMethods: [s3.HttpMethods.PUT, s3.HttpMethods.GET], // Allow GET, POST, and PUT methods
+              allowedHeaders: ['*'], // Allow all headers
+            },
+          ],
       })
       }
     });

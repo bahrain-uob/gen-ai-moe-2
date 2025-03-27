@@ -108,7 +108,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
           </p>
 
           {/* Dropzone for Audio Files */}
-          <h2 className="subtitle">Audio Files</h2>
+          <h2 className="subtitle">Please upload 7 Audio Files</h2>
           <DropzoneAudio
             className="dropzone-container"
             onFileSelected={handleAudioFiles} // Pass callback for multiple files

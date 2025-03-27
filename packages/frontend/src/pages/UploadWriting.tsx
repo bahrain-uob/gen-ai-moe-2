@@ -94,7 +94,7 @@ const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
           </p>
 
           {/* Dropzone for Image Files */}
-          <h2 className="subtitle">Image Files</h2>
+          <h2 className="subtitle">Image File</h2>
           <DropzoneImageFiles
             className="dropzone-container"
             onFileSelected={handleImageFile} // Pass callback
