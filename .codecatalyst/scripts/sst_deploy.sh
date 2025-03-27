@@ -13,7 +13,7 @@ if [ -f ./.env ]; then
   npx cdk bootstrap aws://$AWS_ACCOUNT_ID/us-east-1 --force \
     --cloudformation-execution-policies arn:aws:iam::$AWS_ACCOUNT_ID:policy/Cdk_Least \
     --no-public-access-block-configuration
-  npx sst deploy --stage prod
+  npx sst deploy --stage iga
 else
   echo ".env file not found in the current directory"
   echo "Current directory: $(pwd)"
