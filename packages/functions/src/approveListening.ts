@@ -255,15 +255,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                                     Choices: {
                                       L: parsedBody.validSections[7].choices.map((choice: string) => ({ S: choice })),
                                     },
-                                    CorrectAnswers: { 
-                                      L: [ 
-                                        { 
-                                          L: [ 
-                                            { S: `${parsedBody.validSections[7].selectedAnswer}` } 
-                                          ] 
-                                        } 
-                                      ] 
-                                    },
+                                    CorrectAnswers: { S: `${parsedBody.validSections[7].selectedAnswer}` },
                                     QuestionText: { S: `${parsedBody.validSections[7].question}` },
                                   },
                                 },
@@ -272,15 +264,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                                     Choices: {
                                       L: parsedBody.validSections[8].choices.map((choice: string) => ({ S: choice })),
                                     },
-                                    CorrectAnswers: { 
-                                      L: [ 
-                                        { 
-                                          L: [ 
-                                            { S: `${parsedBody.validSections[8].selectedAnswer}` } 
-                                          ] 
-                                        } 
-                                      ] 
-                                    },
+                                    CorrectAnswers: { S: `${parsedBody.validSections[8].selectedAnswer}`},
                                     QuestionText: { S: `${parsedBody.validSections[8].question}` },
                                   },
                                 },
