@@ -49,7 +49,7 @@ import { StackContext } from 'sst/constructs';
 import { Fn } from 'aws-cdk-lib';
 
 export function GrammarToolStack({ stack }: StackContext) {
-  const grammarToolName = undefined;
+  const grammarToolName = 'grammarToolDNS';
   let grammarToolDNS: string;
 
   if (stack.stage === 'prod') {
@@ -65,7 +65,7 @@ export function GrammarToolStack({ stack }: StackContext) {
     });
   } else {
     // In non-production environments, import the API URL
-    grammarToolDNS = grammarToolName;
+    grammarToolDNS = Fn.importValue(grammarToolName);;
     stack.addOutputs({
       GrammarTool: grammarToolDNS,
     });
