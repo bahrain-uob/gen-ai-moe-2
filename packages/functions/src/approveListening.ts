@@ -255,7 +255,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                                     Choices: {
                                       L: parsedBody.validSections[7].choices.map((choice: string) => ({ S: choice })),
                                     },
-                                    CorrectAnswers: { S: `${parsedBody.validSections[7].selectedAnswer}` },
+                                    CorrectAnswer: { S: `${parsedBody.validSections[7].selectedAnswer}` },
                                     QuestionText: { S: `${parsedBody.validSections[7].question}` },
                                   },
                                 },
@@ -264,7 +264,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                                     Choices: {
                                       L: parsedBody.validSections[8].choices.map((choice: string) => ({ S: choice })),
                                     },
-                                    CorrectAnswers: { S: `${parsedBody.validSections[8].selectedAnswer}`},
+                                    CorrectAnswer: { S: `${parsedBody.validSections[8].selectedAnswer}`},
                                     QuestionText: { S: `${parsedBody.validSections[8].question}` },
                                   },
                                 },
