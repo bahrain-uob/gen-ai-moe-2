@@ -49,7 +49,7 @@ import { StackContext } from 'sst/constructs';
 import { Fn } from 'aws-cdk-lib';
 
 export function GrammarToolStack({ stack }: StackContext) {
-  const grammarToolName = 'grammarToolDNS';
+  const grammarToolName = undefined;
   let grammarToolDNS: string;
 
   if (stack.stage === 'prod') {
