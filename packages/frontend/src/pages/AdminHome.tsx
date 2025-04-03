@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import '../components/AdminStyle/AdminHome.css';
 import { get } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
-//import adminUserCheck from '../components/userCheck';
+import AdminUserCheck from '../components/userCheck';
 import ChartComponent from '../components/AdminStyle/ChartComponent'; // Correct import for ChartComponent
 import { ChartData, ChartOptions } from 'chart.js';
 import { Scatter } from 'react-chartjs-2';
@@ -83,9 +83,7 @@ function AdminHome() {
   const [topByExamsSolved, setTopByExamsSolved] = useState<any[]>([]);
   const [topByHighestStreak, setTopByHighestStreak] = useState<any[]>([]);
 
-  // useEffect(()=>{
-  //   adminUserCheck();
-  // })
+  AdminUserCheck();
 
   useEffect(() => {
     const fetchData = async () => {
