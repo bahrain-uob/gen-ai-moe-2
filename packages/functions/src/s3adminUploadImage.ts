@@ -76,10 +76,12 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { Bucket } from 'sst/node/bucket';
+import { S3 } from 'aws-sdk';
 import { use } from 'sst/constructs';
 import { DBStack } from '../../../stacks/DBStack';
 
 const s3 = new S3Client({});
+const s3list = new S3();
 
 export const handler: APIGatewayProxyHandler = async event => {
   //const bucketName = Bucket.Polly.bucketName;
@@ -141,6 +143,21 @@ export const handler: APIGatewayProxyHandler = async event => {
   try {
     const userID = event.requestContext.authorizer!.jwt.claims.sub;
     const currentSection = event.queryStringParameters?.section || 'default';
+
+    // List all objects in the S3 bucket
+    const objects = await s3list.listObjectsV2({ Bucket: bucketName, Prefix: `unApproved/${currentSection}/`, }).promise();
+
+    console.log("LIST COMMAND:", objects)
+    let targetObjectKey: string | null = null;
+
+    // Find the object whose name contains the userID
+    for (const obj of objects.Contents || []) {
+      if (obj.Key && obj.Key.includes(userID)) {
+        targetObjectKey = obj.Key;
+        console.log("Obj Key COMMAND:", obj.Key)
+      }
+    }
+
     const fileName = `unApproved/${currentSection}/${userID}.${contentTypeHeader.split('/')[1] || 'bin'}`;
     const command = new PutObjectCommand({
       Bucket: bucketName,
