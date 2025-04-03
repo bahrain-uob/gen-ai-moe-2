@@ -8,12 +8,14 @@ import { toJSON } from '../utilities';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'; // Import Link for navigation
+import AdminUserCheck from '../components/userCheck';
 
 interface UploadSpeakingProps {
   hideLayout?: boolean; // Adding the hideLayout prop
 }
 
 const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
+  AdminUserCheck();
   const navLinks = [
     { text: 'Dashboard', to: '/admin-home' },
     { text: 'Upload Exam', to: '/AdminUploadExams' },

@@ -3,6 +3,7 @@ import { get } from "aws-amplify/api";
 import { post } from 'aws-amplify/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminUserCheck from '../components/userCheck';
 //import { toJSON } from '../utilities';
 //import { Nav } from '../components/Nav'; // Correct import for Nav
 
@@ -11,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // }
 
 const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningProps*/) => {
+  AdminUserCheck();
   // const navLinks = [
   //   { text: 'Dashboard', to: '/admin-home' },
   //   { text: 'Upload Exam', to: '/AdminUploadExams' },

@@ -8,12 +8,14 @@ import '../components/AdminStyle/Upload.css';
 import { post } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
 import { Link } from 'react-router-dom'; // Import Link for navigation
+import AdminUserCheck from '../components/userCheck';
 
 interface UploadListeningProps {
   hideLayout?: boolean; // Adding the hideLayout prop
 }
 
 const UploadListening = ({ hideLayout }: UploadListeningProps) => {
+  AdminUserCheck();
   const navLinks = [
     { text: 'Dashboard', to: '/admin-home' },
     { text: 'Upload Exam', to: '/AdminUploadExams' },

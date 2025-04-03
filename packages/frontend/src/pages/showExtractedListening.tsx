@@ -5,12 +5,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { post } from 'aws-amplify/api';
 import WaveSurfer from "wavesurfer.js";
+import AdminUserCheck from '../components/userCheck';
 
 // interface UploadListeningProps {
 //   hideLayout?: boolean; // Adding the hideLayout prop
 // }
 
 const ListeningExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningProps*/) => {
+  AdminUserCheck();
   // const navLinks = [
   //   { text: 'Dashboard', to: '/admin-home' },
   //   { text: 'Upload Exam', to: '/AdminUploadExams' },

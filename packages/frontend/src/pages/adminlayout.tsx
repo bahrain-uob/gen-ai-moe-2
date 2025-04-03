@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'; // Import the Link component for navigation
 import '../components/AdminStyle/adminLandingPage.css'; // Link to your custom styles
 import { Nav } from '../components/Nav'; 
+import AdminUserCheck from '../components/userCheck';
 
 const AdminLandingPage = () => {
+  AdminUserCheck();
   const navLinks = [
     { text: 'Dashboard', to: '/admin-home' },
     { text: 'Upload Exam', to: '/AdminUploadExams' },

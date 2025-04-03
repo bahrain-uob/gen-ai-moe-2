@@ -7,6 +7,7 @@ import ChartComponent from '../components/AdminStyle/ChartComponent'; // Correct
 import { ChartData, ChartOptions } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { Nav } from '../components/Nav';
+import AdminUserCheck from '../components/userCheck';
 
 import {
   Chart as ChartJS,
@@ -29,6 +30,7 @@ ChartJS.register(
 );
 
 function Schooldatafetch() {
+  AdminUserCheck();
   const [studentCount, setStudentCount] = useState<number | null>(null);
   const [avgOverallAvg, setAvgOverallAvg] = useState<number | null>(null);
   const [avgReadingScore, setAvgReadingScore] = useState<number | null>(null);

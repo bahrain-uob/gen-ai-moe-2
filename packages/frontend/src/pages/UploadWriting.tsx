@@ -8,12 +8,14 @@ import DropzoneImageFiles from '../components/DropzoneImagefiles';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminUserCheck from '../components/userCheck';
 
 interface UploadWritingProps {
   hideLayout?: boolean;
 }
 
 const UploadWriting = ({ hideLayout }: UploadWritingProps) => {
+  AdminUserCheck();
   const navLinks = [
     { text: 'Dashboard', to: '/admin-home' },
     { text: 'Upload Exam', to: '/AdminUploadExams' },

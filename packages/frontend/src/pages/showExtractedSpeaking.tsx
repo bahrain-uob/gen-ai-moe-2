@@ -4,6 +4,7 @@ import { post } from 'aws-amplify/api';
 import WaveSurfer from "wavesurfer.js";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminUserCheck from '../components/userCheck';
 //import { Nav } from '../components/Nav'; // Correct import for Nav
 
 // interface UploadListeningProps {
@@ -11,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // }
 
 const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningProps*/) => {
+  AdminUserCheck();
   // const navLinks = [
   //   { text: 'Dashboard', to: '/admin-home' },
   //   { text: 'Upload Exam', to: '/AdminUploadExams' },

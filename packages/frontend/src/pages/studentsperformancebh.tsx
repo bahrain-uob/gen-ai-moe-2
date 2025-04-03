@@ -5,8 +5,10 @@ import '../components/AdminStyle/AdminHome.css';
 import { get } from 'aws-amplify/api';
 import '../components/AdminStyle/studentperformance.css';
 import { toJSON } from '../utilities';
+import AdminUserCheck from '../components/userCheck';
 
 function StudentPerformance() {
+  AdminUserCheck();
   const [topByOverallAvg, setTopByOverallAvg] = useState<any[]>([]); // State for top students by overall average
   const [topByExamsSolved, setTopByExamsSolved] = useState<any[]>([]); // State for top students by exams solved
   const [topByHighestStreak, setTopByHighestStreak] = useState<any[]>([]); // State for top students by highest streak
