@@ -154,7 +154,10 @@ export const handler: APIGatewayProxyHandler = async event => {
     for (const obj of objects.Contents || []) {
       if (obj.Key && obj.Key.includes(userID)) {
         targetObjectKey = obj.Key;
-        console.log("Obj Key COMMAND:", obj.Key)
+        console.log("Deleting Existing Obj Key:", obj.Key)
+        const targetObjectImage = await s3list
+            .deleteObject({ Bucket: bucketName, Key: obj.Key })
+            .promise();
       }
     }
 
