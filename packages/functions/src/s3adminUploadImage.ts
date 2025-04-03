@@ -144,13 +144,13 @@ export const handler: APIGatewayProxyHandler = async event => {
     const userID = event.requestContext.authorizer!.jwt.claims.sub;
     const currentSection = event.queryStringParameters?.section || 'default';
 
-    // List all objects in the S3 bucket
+    // List if exist unapproved objects in the S3 bucket
     const objects = await s3list.listObjectsV2({ Bucket: bucketName, Prefix: `unApproved/${currentSection}/`, }).promise();
 
     console.log("LIST COMMAND:", objects)
     let targetObjectKey: string | null = null;
 
-    // Find the object whose name contains the userID
+    // Find the object whose name contains the userID and delete them
     for (const obj of objects.Contents || []) {
       if (obj.Key && obj.Key.includes(userID)) {
         targetObjectKey = obj.Key;
