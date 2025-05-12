@@ -1,4 +1,5 @@
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { S3Client, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { Bucket } from 'sst/node/bucket';
 import { use } from 'sst/constructs';
@@ -16,14 +17,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   //   speakingPollyBucket
   // } = use(DBStack);
   
-  const BUCKET_NAME = 'speaking-questions-polly'
-  const REGION = "us-east-1"; // The region of your bucket
+  const BUCKET_NAME = Bucket.speakingPolly.bucketName;
+  const REGION = process.env.AWS_REGION ?? "us-east-1"; // The region of your bucket
   const BUCKET_URL = `https://${BUCKET_NAME}.s3.${REGION}.amazonaws.com/`;
+  console.log("Dynamic Region:", process.env.AWS_REGION)
 
   try {
     const currentSection = event.queryStringParameters?.section;
-
-    
 
     // Determine folder and file count limit based on the section
     const folderName = currentSection;
@@ -48,8 +48,35 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Filter objects to include only files ending with `.mp3` and containing the userID
     let mp3Files = null;
+    let preSignedUrls = [];
     let image = null;
     if(folderName != "Writing"){
+    //    mp3Files = response.Contents?.filter(
+    //   (object) => /*object.Key?.endsWith(".mp3") &&*/ object.Key?.includes(userID)
+    // )
+    //   .map((object) => `${BUCKET_URL}${object.Key}`) // Generate full URLs
+    //   .slice(0, fileLimit); // Limit to the required number of files
+
+    // console.log("The audio files are: ", mp3Files);
+    
+    const mp3Objects = response.Contents?.filter(
+      (object) => /*object.Key?.endsWith(".mp3") &&*/ object.Key?.includes(userID)
+    ).map((object) => `${object.Key}`) // Generate full URLs
+    .slice(0, fileLimit);
+
+    for (const object of mp3Objects || []) {
+      const command = new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: object, // Non-null assertion since object.Key is checked before
+      });
+
+      // Generate pre-signed URL for the current file
+      const presignedUrl = await getSignedUrl(s3, command, {
+        expiresIn: 300, // URL expires in 3 minutes
+      });
+
+      preSignedUrls.push(presignedUrl);
+    }
        mp3Files = response.Contents?.filter(
       (object) => /*object.Key?.endsWith(".mp3") &&*/ object.Key?.includes(userID)
     )
@@ -57,11 +84,30 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       .slice(0, fileLimit); // Limit to the required number of files
 
     console.log("The audio files are: ", mp3Files);
+
+    if(mp3Files != null){
+    for(var i = 0 ; i < mp3Files.length ; i++){
+      preSignedUrls.push(mp3Files[i])
+    }}else{
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: "Error fetching objects from S3" }),
+      };
+    }
+    mp3Files = preSignedUrls;
   }
   else{
     for (const obj of response.Contents|| []) {
       if (obj.Key && obj.Key.includes(userID)) {
-        image = `${BUCKET_URL}${obj.Key}`;
+        //image = `${BUCKET_URL}${obj.Key}`;
+        const command = new GetObjectCommand({
+          Bucket: BUCKET_NAME,
+          Key: obj.Key, // Non-null assertion since object.Key is checked before
+        });
+        // Generate pre-signed URL for the current file
+        image = await getSignedUrl(s3, command, {
+          expiresIn: 300, // URL expires in 3 minutes
+        });
         break;
       }
     };

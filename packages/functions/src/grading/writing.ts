@@ -109,7 +109,7 @@ export const gradeWritingPart = async (
   });
 
   // Run the LanguageTool for grammar check
-  const grammerToolFeedback = await runLangTool(answer);
+  //const grammerToolFeedback = await runLangTool(answer);
 
   // Get all feedbacks in parallel
   const feedbacks = await Promise.all(_feedbacks);
@@ -150,7 +150,7 @@ export const gradeWritingPart = async (
       text: feedbacks[3],
       score: scores[3],
     },
-    'Grammer Tool Feedback': grammerToolFeedback,
+    //'Grammer Tool Feedback': grammerToolFeedback,
     'Combined Feedback': '',
     score: avgScore,
   };

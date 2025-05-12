@@ -7,8 +7,8 @@ import json
 from botocore.exceptions import ClientError
 
 
-
-polly = boto3.client('polly', region_name='us-east-1') 
+region = os.environ.get('AWS_REGION', 'us-east-1')
+polly = boto3.client('polly', region_name=region)
 s3 = boto3.client('s3')
 PollyBucket = os.environ.get('Polly_Bucket')
 possibleSpeakers = ["Gregory", "Joey", "Matthew", "Stephen", "Joanna",

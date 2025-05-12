@@ -42,7 +42,7 @@ export async function runModel(prompt: string) {
   const modelParams = {
     inputText: prompt,
     textGenerationConfig: {
-      maxTokenCount: 2700,
+      maxTokenCount: 3072,
       stopSequences: [],
       temperature: 0.1,
       topP: 0.9,

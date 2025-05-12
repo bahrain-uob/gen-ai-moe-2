@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { Nav } from '../components/Nav'; // Correct import for Nav
 import DropzoneAudio from '../components/DropzoneAudio';
 import DropzoneListeningQfiles from '../components/DropzoneListeningQfiles';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../components/AdminStyle/Upload.css';
 import { post } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
 import { Link } from 'react-router-dom'; // Import Link for navigation
+import AdminUserCheck from '../components/userCheck';
 
 interface UploadListeningProps {
   hideLayout?: boolean; // Adding the hideLayout prop
 }
 
 const UploadListening = ({ hideLayout }: UploadListeningProps) => {
+  AdminUserCheck();
   const navLinks = [
     { text: 'Dashboard', to: '/admin-home' },
     { text: 'Upload Exam', to: '/AdminUploadExams' },
@@ -21,6 +25,9 @@ const UploadListening = ({ hideLayout }: UploadListeningProps) => {
   const [questionFile, setQuestionFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // Track if form is submitted
+  const handleToastClose = () => {
+    window.location.href = "/showExtractedListening";
+  };
 
   // Callback to collect multiple audio files from DropzoneAudio
   const handleAudioFiles = (files: File[]) => setAudioFiles(files); // Handle an array of files
@@ -45,7 +52,7 @@ const UploadListening = ({ hideLayout }: UploadListeningProps) => {
         await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUploadAudio?section=${encodeURIComponent(section)}`,
+            path: `/UploadAudio?section=${encodeURIComponent(section)}`,
             options: { body: audioFormData },
           }),
         );
@@ -59,16 +66,21 @@ const UploadListening = ({ hideLayout }: UploadListeningProps) => {
         await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUpload?section=${encodeURIComponent(section)}`,
+            path: `/fileUpload?section=${encodeURIComponent(section)}`,
             options: { body: questionFormData },
           }),
         );
       }
 
-      setUploadStatus('Upload successfully!');
+      setUploadStatus('Uploaded successfully!');
       setIsSubmitted(true); // Mark the form as submitted
+      toast.success(`Uploaded successfully!: Extracting...`, {
+              autoClose: 20000,
+              onClose: handleToastClose, // Redirect to Extracted Page
+            })
     } catch (error) {
       setUploadStatus(`Upload failed: ${(error as Error).message}`);
+      toast.error(`Upload failed: ${(error as Error).message}`, {});
     }
   };
 
@@ -77,6 +89,7 @@ const UploadListening = ({ hideLayout }: UploadListeningProps) => {
       {/* Use Nav component here */}
       {!hideLayout && <Nav entries={navLinks} />}
       {/* Conditionally render Nav based on hideLayout */}
+      <ToastContainer />
       <div className="container">
         <div className="upload-section">
           <h1 className="page-title">Upload Your Listening Files</h1>
@@ -85,7 +98,7 @@ const UploadListening = ({ hideLayout }: UploadListeningProps) => {
           </p>
 
           {/* Dropzone for Audio Files */}
-          <h2 className="subtitle">Audio Files</h2>
+          <h2 className="subtitle">Please upload 4 Audio Files</h2>
           <DropzoneAudio
             className="dropzone-container"
             onFileSelected={handleAudioFiles} // Handle multiple files
@@ -118,14 +131,14 @@ const UploadListening = ({ hideLayout }: UploadListeningProps) => {
           {uploadStatus && (
             <p
               className={`upload-status ${
-                uploadStatus.startsWith('Upload successfully')
+                uploadStatus.startsWith('Uploaded successfully')
                   ? 'success'
                   : 'error'
               }`}
             >
-              {uploadStatus}
             </p>
           )}
+
         </div>
       </div>
     </div>

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { get } from "aws-amplify/api";
 import { post } from 'aws-amplify/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AdminUserCheck from '../components/userCheck';
 //import { toJSON } from '../utilities';
 //import { Nav } from '../components/Nav'; // Correct import for Nav
 
@@ -9,6 +12,7 @@ import { post } from 'aws-amplify/api';
 // }
 
 const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningProps*/) => {
+  AdminUserCheck();
   // const navLinks = [
   //   { text: 'Dashboard', to: '/admin-home' },
   //   { text: 'Upload Exam', to: '/AdminUploadExams' },
@@ -18,6 +22,7 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [audioUrls, setAudioUrls] = useState<string | null>(null);
+  var audioS3Urls : string = 'undefined';
   
   const sectionName = window.location.pathname?.split('/').pop()?.replace('showExtracted', '') || '';
 
@@ -88,6 +93,9 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
 
   if (audioUrls && audioUrls.length > 0) {
   console.log(audioUrls)
+  const presignedindex = audioUrls.indexOf('?X-Amz')
+  audioS3Urls = audioUrls.substring(0,presignedindex);
+  console.log("To Be Approved Url:", audioS3Urls)
 }
 
   }, [audioUrls]); // Add audioUrls as a dependency
@@ -109,7 +117,7 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
       const validSections = sections.filter((content) => content !== null && content.trim() !== "");
       const payload = {
         validSections,
-        audioUrls, // Ensure `audioUrls` is defined in your component or state
+        audioS3Urls, // Ensure `audioUrls` is defined in your component or state
       };
   
       // Send the gathered content to your Lambda function
@@ -120,9 +128,15 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
       });
   
       console.log("Approve response:", response);
-      alert("Questions Saved Successfully!")
-      // Redirect to admin landing page
-      window.location.href = "/admin-home";
+
+      const handleToastClose = () => {
+        window.location.href = "/admin-home";
+      };
+
+      toast.success(`Questions Uploaded Successfully!`, {
+        onClose: handleToastClose, // Redirect to admin landing page
+      });
+
     } catch (error) {
       console.error("Approve failed:", (error as Error).message);
       const buttonApprove = document.getElementById("btnApprove") as HTMLButtonElement | null;
@@ -190,6 +204,7 @@ const WritingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPro
         backgroundColor: "#f8f9fa",
       }}
     >
+      <ToastContainer />
       <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333" }}>
         Here is the extracted file:
       </h1>

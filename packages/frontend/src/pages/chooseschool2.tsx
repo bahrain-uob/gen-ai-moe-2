@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { get } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
-
+import AdminUserCheck from '../components/userCheck';
+ 
 function SchoolsList2() {
+  AdminUserCheck();
   const [schools, setSchools] = useState<string[]>([]); // State for schools
 
   // Fetch list of schools

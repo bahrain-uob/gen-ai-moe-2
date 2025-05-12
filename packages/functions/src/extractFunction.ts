@@ -3,6 +3,7 @@ import { S3Event, Context } from 'aws-lambda';
 import { Bucket } from 'sst/node/bucket';
 import * as util from 'util';
 
+//const extractedbucket = process.env.extractedTXT || 'undefined';
 export const handler = async (event: S3Event, context: Context): Promise<void> => {
     console.log("Lambda is Triggered NOW in the safe mode :)");
     try {
@@ -68,6 +69,7 @@ export const handler = async (event: S3Event, context: Context): Promise<void> =
                     const s3Client = new AWS.S3();
                     await s3Client.upload({
                         Bucket: Bucket.ExtractedTXT.bucketName,
+                        //Bucket: extractedbucket,
                         Key: outputFileName,
                         Body: fs.createReadStream(tempFilePath)
                     }).promise();

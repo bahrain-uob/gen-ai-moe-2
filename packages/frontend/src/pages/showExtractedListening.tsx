@@ -1,16 +1,18 @@
 import React, { useEffect, useState,useRef } from "react";
 import { get } from "aws-amplify/api";
 //import { Nav } from '../components/Nav'; // Correct import for Nav
-//import { /*ToastContainer*/ toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { post } from 'aws-amplify/api';
 import WaveSurfer from "wavesurfer.js";
+import AdminUserCheck from '../components/userCheck';
 
 // interface UploadListeningProps {
 //   hideLayout?: boolean; // Adding the hideLayout prop
 // }
 
 const ListeningExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningProps*/) => {
+  AdminUserCheck();
   // const navLinks = [
   //   { text: 'Dashboard', to: '/admin-home' },
   //   { text: 'Upload Exam', to: '/AdminUploadExams' },
@@ -21,6 +23,7 @@ const [feedback, setFeedback] = useState<string>("");
 const [fileContent, setFileContent] = useState<string | null>(null);
 const [error, setError] = useState<string | null>(null);
 const [audioUrls, setAudioUrls] = useState<string[] | null>(null);
+var audioS3Urls: string[] = [];
 const wavesurferRefs = useRef<(WaveSurfer | null)[]>([]);  // Ref to store WaveSurfer instances for each audio file
 
   
@@ -92,8 +95,9 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
   useEffect(() => {
     // Initialize WaveSurfer instances for each audio URL
   if (audioUrls && audioUrls.length > 0) {
-  for (let index = 0; index < audioUrls.length; index++) {
+  for (let index = 0; index < audioUrls.length; index++) { //audioUrls is expected to always be of length 8
 
+    if (index < 4){
     const url = audioUrls[index];
     const waveSurferInstance = WaveSurfer.create({
       container: `#wavesurfer-container-${index}`,
@@ -107,6 +111,10 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
 
     wavesurferRefs.current[index] = waveSurferInstance; // Store instance for each URL
     waveSurferInstance.load(url);
+  }else{ // Do this only once tto save all 
+    audioS3Urls.push(audioUrls[index])
+    console.log("S3 Returned Urls", audioS3Urls)
+  }
   }
 }
 
@@ -130,6 +138,7 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
   //};
   
   const approving = async (e: React.FormEvent) => {
+    var unAnswered: string[] = [];
     let validInput = true;
     try{
       e.preventDefault();
@@ -148,7 +157,8 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
           // Gather selected answers
           const selectedAnswer = (section.querySelector("input[type='radio']:checked") as HTMLInputElement)?.value || null;
           if(question && !selectedAnswer){
-            alert(`Please selected the correct answer for \"${question}\"`)
+            //alert(`Please selected the correct answer for \"${question}\"`)
+            unAnswered.push(question[0] + (question[1] == '.' ? '' : question[1]))
             validInput = false;
           }
     
@@ -165,7 +175,7 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
           // Send the gathered data to your Lambda function
           const requestData = {
             validSections,
-            audioUrls,
+            audioS3Urls,
           };
           const response = await post({
             apiName: "myAPI",
@@ -175,12 +185,18 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
       
           console.log("Approve response:", response);
     
-          alert("Questions Saved Successfully!")
-          // Redirect to admin landing page
-          window.location.href = "/admin-home";
+          const handleToastClose = () => {
+            window.location.href = "/admin-home";
+          };
+
+          toast.success(`Questions Uploaded Successfully!`, {
+            onClose: handleToastClose, // Redirect to admin landing page
+          });
+          
         }else{
         if(buttonApprove)
           buttonApprove.disabled = false;
+          toast.error(`Please Select Answers for all Questions: ${unAnswered}`, {});
         }
         
       //setUploadStatus(null);
@@ -313,6 +329,7 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
         backgroundColor: "#f8f9fa",
       }}
     >
+      <ToastContainer />
       <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333" }}>
         Here is the extracted file:
       </h1>
@@ -386,7 +403,7 @@ const sectionName = window.location.pathname?.split('/').pop()?.replace('showExt
         }}
       >
         {audioUrls &&
-          audioUrls.map((url, index) => (
+          audioUrls.map((url, index) => index < 4 && (
             console.log(url),
             <div
               key={index}

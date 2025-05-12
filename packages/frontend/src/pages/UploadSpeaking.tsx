@@ -5,13 +5,17 @@ import DropzoneListeningQfiles from '../components/DropzoneListeningQfiles';
 import '../components/AdminStyle/Upload.css';
 import { post } from 'aws-amplify/api';
 import { toJSON } from '../utilities';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'; // Import Link for navigation
+import AdminUserCheck from '../components/userCheck';
 
 interface UploadSpeakingProps {
   hideLayout?: boolean; // Adding the hideLayout prop
 }
 
 const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
+  AdminUserCheck();
   const navLinks = [
     { text: 'Dashboard', to: '/admin-home' },
     { text: 'Upload Exam', to: '/AdminUploadExams' },
@@ -21,6 +25,9 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
   const [questionFile, setQuestionFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // Track if form is submitted
+  const handleToastClose = () => {
+    window.location.href = "/showExtractedSpeaking";
+  };
 
   // Callback to collect the multiple audio files from DropzoneAudio
   const handleAudioFiles = (files: File[]) => setAudioFiles(files);
@@ -48,7 +55,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
         const audioResponse = await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUploadAudio?section=${encodeURIComponent(section)}`,
+            path: `/UploadAudio?section=${encodeURIComponent(section)}`,
             options: { body: audioFormData },
           }),
         );
@@ -64,7 +71,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
         const questionResponse = await toJSON(
           post({
             apiName: 'myAPI',
-            path: `/adminUpload?section=${encodeURIComponent(section)}`,
+            path: `/fileUpload?section=${encodeURIComponent(section)}`,
             options: { body: questionFormData },
           }),
         );
@@ -75,12 +82,18 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
       const allSuccessful = allUploadsSuccessful.every(success => success);
       setUploadStatus(
         allSuccessful
-          ? 'files uploaded successfully!'
+          ? 'Uploaded successfully!'
           : 'Some files failed to upload.',
       );
       setIsSubmitted(true); // Mark form as submitted
+      toast.success(`Uploaded successfully!: Extracting...`, {
+              autoClose: 10000,
+              onClose: handleToastClose, // Redirect to Extracted Page
+            })
+
     } catch (error) {
       setUploadStatus(`Upload failed: ${(error as Error).message}`);
+      toast.error(`Upload failed: ${(error as Error).message}`, {});
     }
   };
 
@@ -88,6 +101,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
     <div className="upload-page">
       {/* Conditionally render Nav component based on hideLayout */}
       {!hideLayout && <Nav entries={navLinks} />}
+      <ToastContainer />
       <div className="container">
         <div className="upload-section">
           <h1 className="page-title">Upload Your Speaking Files</h1>
@@ -96,7 +110,7 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
           </p>
 
           {/* Dropzone for Audio Files */}
-          <h2 className="subtitle">Audio Files</h2>
+          <h2 className="subtitle">Please upload 7 Audio Files</h2>
           <DropzoneAudio
             className="dropzone-container"
             onFileSelected={handleAudioFiles} // Pass callback for multiple files
@@ -126,17 +140,29 @@ const UploadSpeaking = ({ hideLayout }: UploadSpeakingProps) => {
             </Link>
           </div>
 
+          {uploadStatus && uploadStatus.startsWith('Uploaded successfully') && (
+            <p
+              className={`upload-status success}`}
+            >
+              {toast.success(`${uploadStatus}: Extracting...`, {
+                autoClose: 10000,
+                onClose: handleToastClose, // Redirect to Extracted Page
+              })
+              }
+            </p>
+          )}
+
           {uploadStatus && (
             <p
               className={`upload-status ${
-                uploadStatus.startsWith('All files uploaded successfully')
+                uploadStatus.startsWith('Uploaded successfully')
                   ? 'success'
                   : 'error'
               }`}
             >
-              {uploadStatus}
             </p>
           )}
+
         </div>
       </div>
     </div>

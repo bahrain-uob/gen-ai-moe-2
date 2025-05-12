@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Nav } from '../components/Nav';
 import '../components/AdminStyle/Upload.css';
+import AdminUserCheck from '../components/userCheck';
 
 const sections = [
   { name: 'Writing', route: '/uploadWriting' },
@@ -11,6 +12,7 @@ const sections = [
 ];
 
 const AdminUploadExams: React.FC = () => {
+  AdminUserCheck();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 

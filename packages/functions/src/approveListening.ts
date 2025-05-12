@@ -26,8 +26,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           p1Question = parsedBody.validSections[0]
           console.log("Questions?:", p1Question)
           console.log("Can we get the choices?:", parsedBody.validSections[0].choices )
-          const sourceBucket = "speaking-questions-polly";
-            const destinationBucket = "speaking-questions-polly";
+          const sourceBucket = Bucket.speakingPolly.bucketName;
+            const destinationBucket = Bucket.speakingPolly.bucketName;
             let listIDs = []
             for (let i = 0; i<4; i++){
                      let currentID = uuidv4()
@@ -51,7 +51,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                  
                    }
     
-          parsedBody.audioUrls = parsedBody.audioUrls.map((url:string) => url.split('/').pop());
+          parsedBody.audioS3Urls = parsedBody.audioS3Urls.map((url:string) => url.split('/').pop());
 
           for (const fullQuestion of parsedBody.validSections) {
             const { question, choices, selectedAnswer } = fullQuestion;
@@ -151,7 +151,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                         },
                       ],
                     },
-                    ScriptKey: { S: `${listIDs[0]}.${parsedBody.audioUrls[0].split('.').pop()}` },
+                    ScriptKey: { S: `${listIDs[0]}.${parsedBody.audioS3Urls[0].split('.').pop()}` },
                   },
                 },
                 P2: {
@@ -226,7 +226,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                         },
                       ],
                     },
-                    ScriptKey: { S: `${listIDs[1]}.${parsedBody.audioUrls[1].split('.').pop()}` },
+                    ScriptKey: { S: `${listIDs[1]}.${parsedBody.audioS3Urls[1].split('.').pop()}` },
                   },
                 },
                 P3: {
@@ -255,15 +255,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                                     Choices: {
                                       L: parsedBody.validSections[7].choices.map((choice: string) => ({ S: choice })),
                                     },
-                                    CorrectAnswers: { 
-                                      L: [ 
-                                        { 
-                                          L: [ 
-                                            { S: `${parsedBody.validSections[7].selectedAnswer}` } 
-                                          ] 
-                                        } 
-                                      ] 
-                                    },
+                                    CorrectAnswer: { S: `${parsedBody.validSections[7].selectedAnswer}` },
                                     QuestionText: { S: `${parsedBody.validSections[7].question}` },
                                   },
                                 },
@@ -272,15 +264,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                                     Choices: {
                                       L: parsedBody.validSections[8].choices.map((choice: string) => ({ S: choice })),
                                     },
-                                    CorrectAnswers: { 
-                                      L: [ 
-                                        { 
-                                          L: [ 
-                                            { S: `${parsedBody.validSections[8].selectedAnswer}` } 
-                                          ] 
-                                        } 
-                                      ] 
-                                    },
+                                    CorrectAnswer: { S: `${parsedBody.validSections[8].selectedAnswer}`},
                                     QuestionText: { S: `${parsedBody.validSections[8].question}` },
                                   },
                                 },
@@ -290,7 +274,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                         },
                       ],
                     },
-                    ScriptKey: { S: `${listIDs[2]}.${parsedBody.audioUrls[2].split('.').pop()}` },
+                    ScriptKey: { S: `${listIDs[2]}.${parsedBody.audioS3Urls[2].split('.').pop()}` },
                   },
                 },
                 P4: {
@@ -356,7 +340,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                         },
                       ],
                     },
-                    ScriptKey: { S: `${listIDs[3]}.${parsedBody.audioUrls[3].split('.').pop()}` },
+                    ScriptKey: { S: `${listIDs[3]}.${parsedBody.audioS3Urls[3].split('.').pop()}` },
                   },
                 },
               },
@@ -413,8 +397,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
          
-          for(let i = 0; i< parsedBody.audioUrls.length; i++){
-            let objectKey = parsedBody.audioUrls[i].split("/").pop()
+          for(let i = 0; i< parsedBody.audioS3Urls.length; i++){
+            let objectKey = parsedBody.audioS3Urls[i].split("/").pop()
             const fullobjectKey = `unApproved/Listening/${objectKey}`; // The original object key
             const fileType = objectKey.split('.').pop()
             const idKey = listIDs[i]

@@ -1,13 +1,14 @@
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { Bucket, Table, StackContext, Function, RDS } from 'sst/constructs';
+import { CfnBucket } from 'aws-cdk-lib/aws-s3';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3Cfn from 'aws-cdk-lib/aws-s3';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager';
 import * as path from 'path';
-import { Fn, RemovalPolicy, listMapper } from 'aws-cdk-lib';
-import AWS from 'aws-sdk';
+import * as cdk from 'aws-cdk-lib';
+// import AWS from 'aws-sdk';
 
 export function DBStack(this: any, { stack }: StackContext) {
   // Create the original DynamoDB table 'Records'
@@ -45,17 +46,82 @@ graphlambdafunction.addEnvironment('RECORDS_TABLE', table.tableName);
 graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
 
 
-  const uploads_bucket = new Bucket(stack, 'Uploads');
+  const uploads_bucket = new Bucket(stack, "Uploads", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "UploadsBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+          cors: [
+            {
+              allowedOrigins: ['*'], // Allow requests from any origin
+              allowedMethods: [s3.HttpMethods.PUT, s3.HttpMethods.GET], // Allow GET, POST, and PUT methods
+              allowedHeaders: ['*'], // Allow all headers
+            },
+          ],
+      })
+      }
+    });
   
-  const Polly_bucket = new Bucket(stack, 'Polly');
-  const audiobucket = new Bucket(stack, 'listeningAudios');
-  const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
-    this,
-    'speakingPolly',
-    {
-      bucketArn: 'arn:aws:s3:::speaking-questions-polly',
-    },
-  );
+  const Polly_bucket = new Bucket(stack, "Polly", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "PollyBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+          cors: [
+            {
+              allowedOrigins: ['*'], // Allow requests from any origin
+              allowedMethods: [s3.HttpMethods.PUT], // Allow GET, POST, and PUT methods
+              allowedHeaders: ['*'], // Allow all headers
+            },
+          ],
+      })
+      }
+    })
+
+  const audiobucket = new Bucket(stack, "listeningAudios", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "listeningAudiosBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+      })
+      }
+    })
+    
+  // const speakingPollyBucket = s3.Bucket.fromBucketAttributes(
+  //   this,
+  //   'speakingPolly',
+  //   {
+  //     bucketArn: 'arn:aws:s3:::speaking-questions-polly',
+  //   },
+  // );
+
+  // const speakingPollyBucket = new Bucket(stack, 'speakingPolly',{
+  //   // blockPublicACLs: true,
+  //   cdk:{
+  //     bucket: {
+  //       bucketName: 'speaking-questions-polly',
+  //       bucketArn: 'arn:aws:s3:::speaking-questions-polly',
+  //       // publicReadAccess: false,
+  //       // blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+  //     }
+  //   }
+  // })
+  const speakingPollyBucket = new Bucket(stack, "speakingPolly", {
+      cdk: {
+        bucket: new s3.Bucket(stack, "speakingPollyBucket", {
+          encryption: s3.BucketEncryption.S3_MANAGED,
+          publicReadAccess: false,
+          cors: [
+            {
+              allowedOrigins: ['*'], // Allow requests from any origin
+              allowedMethods: [s3.HttpMethods.GET], // Allow GET, POST, and PUT methods
+              allowedHeaders: ['*'], // Allow all headers
+            },
+          ],
+      }),
+      }
+    })
+
 
   const feedback_table = new Table(stack, 'ResponseFeedback', {
     fields: {
@@ -128,10 +194,12 @@ graphlambdafunction.addEnvironment('USERDATA_TABLE', userdataTable.tableName);
   //     },
   //   });
   // }
+  
 
   // Output database name
   stack.addOutputs({
     UserDataTableName: userdataTable.tableName,
+    SpeakingBucketName: speakingPollyBucket.bucketName,
   });
 
   // Return relevant resources

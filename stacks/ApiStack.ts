@@ -40,7 +40,7 @@ export function ApiStack({ stack }: StackContext) {
       authorizer: 'jwt',
       function: {
         // Bind the table name to our API
-        bind: [table, bucket, bucket2],
+        bind: [table, speakingPollyBucket, bucket, bucket2],
       },
     },
     authorizers: {
@@ -289,7 +289,7 @@ export function ApiStack({ stack }: StackContext) {
           },
         },
       },
-      'POST /adminUpload': {
+      'POST /fileUpload': {
         function: {
           handler: 'packages/functions/src/s3adminUpload.handler',
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
@@ -299,7 +299,7 @@ export function ApiStack({ stack }: StackContext) {
           timeout: '120 seconds',
         },
       },
-      'POST /adminUploadAudio': {
+      'POST /UploadAudio': {
         function: {
           handler: 'packages/functions/src/s3adminUploadAudio.handler',
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],
@@ -310,7 +310,7 @@ export function ApiStack({ stack }: StackContext) {
           timeout: '120 seconds',
         },
       },
-      'POST /adminUploadImage': {
+      'POST /UploadImage': {
         function: {
           handler: 'packages/functions/src/s3adminUploadImage.handler',
           permissions: ['s3:PutObject', 's3:PutObjectAcl'],

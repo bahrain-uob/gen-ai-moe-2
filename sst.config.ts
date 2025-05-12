@@ -8,12 +8,17 @@ import { AuthStack } from './stacks/AuthStack';
 import { GrammarToolStack } from './stacks/GrammarToolStack';
 import { StorageStack } from './stacks/StorageStack';
 
+const region = process.env.AWS_REGION || 'us-east-1';
+const appName = process.env.APP_NAME || 'codecatalyst-sst-app';
 
 export default {
   config(_input) {
     return {
-      name: 'codecatalyst-sst-app',
-      region: 'us-east-1',
+      name: appName,
+      region: region,
+      cdk:{
+        publicAccessBlockConfiguration: false,
+      }
     };
   },
   stacks(app) {
@@ -35,6 +40,7 @@ export default {
         .stack(ApiStack)
         .stack(FrontendStack)
         //.stack(StorageStack)
+        
     }
   },
 } satisfies SSTConfig;

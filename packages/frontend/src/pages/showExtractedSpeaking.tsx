@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { get } from "aws-amplify/api";
 import { post } from 'aws-amplify/api';
 import WaveSurfer from "wavesurfer.js";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AdminUserCheck from '../components/userCheck';
 //import { Nav } from '../components/Nav'; // Correct import for Nav
 
 // interface UploadListeningProps {
@@ -9,6 +12,7 @@ import WaveSurfer from "wavesurfer.js";
 // }
 
 const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningProps*/) => {
+  AdminUserCheck();
   // const navLinks = [
   //   { text: 'Dashboard', to: '/admin-home' },
   //   { text: 'Upload Exam', to: '/AdminUploadExams' },
@@ -18,6 +22,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [audioUrls, setAudioUrls] = useState<string[] | null>(null);
+  const audioS3Urls : string[] = [];
 
   const wavesurferRefs = useRef<(WaveSurfer | null)[]>([]);  // Ref to store WaveSurfer instances for each audio file
   //const [isPlaying, setIsPlaying] = useState(false);
@@ -90,7 +95,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
   if (audioUrls && audioUrls.length > 0) {
   for (let index = 0; index < audioUrls.length; index++) {
     
-
+    if(index < 7){
     const url = audioUrls[index];
     const waveSurferInstance = WaveSurfer.create({
       container: `#wavesurfer-container-${index}`,
@@ -104,6 +109,10 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
 
     wavesurferRefs.current[index] = waveSurferInstance; // Store instance for each URL
     waveSurferInstance.load(url);
+  }else{
+    audioS3Urls.push(audioUrls[index])
+    console.log("S3 Returned Urls", audioS3Urls)
+  }
   }
 }
 
@@ -185,7 +194,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
       });
       
     
-      const validSections = [ sections.filter((content) => content !== null && content.trim() !== ""), audiosDesc.filter((content) => content !== null && content.trim() !== ""), audioUrls ]
+      const validSections = [ sections.filter((content) => content !== null && content.trim() !== ""), audiosDesc.filter((content) => content !== null && content.trim() !== ""), audioS3Urls ]
       console.log(validSections)
       // Send the gathered data to your Lambda function
       const response = await post({
@@ -196,9 +205,14 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
   
       console.log("Approve response:", response);
 
-      alert("Questions Saved Successfully!")
-      // Redirect to admin landing page
-      window.location.href = "/admin-home";
+      const handleToastClose = () => {
+        window.location.href = "/admin-home";
+      };
+
+      toast.success(`Questions Uploaded Successfully!`, {
+        onClose: handleToastClose, // Redirect to admin landing page
+      });
+
     } catch (error) {
       console.error(`Approve failed: ${(error as Error).message}`);
       const buttonApprove = document.getElementById("btnApprove") as HTMLButtonElement | null;
@@ -222,6 +236,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
         backgroundColor: "#f8f9fa",
       }}
     >
+      <ToastContainer />
       <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", color: "#333" }}>
         Here is the extracted file:
       </h1>
@@ -304,7 +319,7 @@ const SpeakingExtractedFilePage: React.FC = (/*{ hideLayout }: UploadListeningPr
         }}
       >
         {audioUrls &&
-          audioUrls.map((url, index) => (
+          audioUrls.map((url, index) => index < 7 && (
             console.log(url),
             <div
               key={index}
