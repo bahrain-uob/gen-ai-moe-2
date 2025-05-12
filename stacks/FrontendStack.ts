@@ -18,7 +18,7 @@ export function FrontendStack({ stack, app }: StackContext) {
   const { api, apiCachePolicy, webSocket } = use(ApiStack);
   const { auth } = use(AuthStack);
 
-  // Deploy our React app
+  // Deploy our React app 
   const site = new StaticSite(stack, 'ReactSite', {
     path: 'packages/frontend',
     buildCommand: 'npm run build',
